@@ -3,7 +3,6 @@ import logging
 import os
 import sys
 import errno
-import boto3
 from configobj import ConfigObj, ConfigObjError
 from collections import defaultdict
 
@@ -15,37 +14,6 @@ except NameError:
 
 
 LOGGER = logging.getLogger(__name__)
-
-
-class AWSConfig(object):
-    def __init__(self, aws_access_key_id, aws_secret_access_key,
-                 region, s3_staging_dir, work_group, profile, config):
-        key = 'aws_profile %s' % profile
-        try:
-            _cfg = config[key]
-        except:
-            # this assumes that the profile is only known in the regular AWS config -> the boto lib will get it
-            # from there. This is especially important if we have some kind of additional temporary session keys for
-            # which the login fails if we set aws_access_key_id/aws_secret_access_key here
-            _cfg = defaultdict(lambda: None)
-
-        self.aws_access_key_id = self.get_val(aws_access_key_id, _cfg['aws_access_key_id'])
-        self.aws_secret_access_key = self.get_val(aws_secret_access_key, _cfg['aws_secret_access_key'])
-        self.region = self.get_val(region, _cfg['region'], self.get_region())
-        self.s3_staging_dir = self.get_val(s3_staging_dir, _cfg['s3_staging_dir'])
-        self.work_group = self.get_val(work_group, _cfg['work_group'])
-        # enable connection to assume role
-        self.role_arn = self.get_val(_cfg.get('role_arn'))
-
-    def get_val(self, *vals):
-        """Return the first True value in `vals` list, otherwise return None."""
-        for v in vals:
-            if v:
-                return v
-
-    def get_region(self):
-        """Try to get region name from aws credentials/config files or environment variables"""
-        return boto3.session.Session().region_name
 
 
 def log(logger, level, message):

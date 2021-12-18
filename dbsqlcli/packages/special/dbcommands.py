@@ -1,7 +1,5 @@
 import logging
-import os
-import platform
-from pyathena import ProgrammingError
+from databricks.sql import ProgrammingError
 
 from dbsqlcli import __version__
 from dbsqlcli.packages.special import iocommands

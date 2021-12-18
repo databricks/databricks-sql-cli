@@ -53,13 +53,10 @@ class CompletionRefresher(object):
         # Create a new pgexecute method to popoulate the completions.
         e = sqlexecute
         executor = SQLExecute(
-            aws_access_key_id = e.aws_access_key_id,
-            aws_secret_access_key = e.aws_secret_access_key,
-            region_name = e.region_name,
-            s3_staging_dir = e.s3_staging_dir,
-            work_group = e.work_group,
-            role_arn = e.role_arn,
-            database = e.database
+            hostname=e.hostname,
+            http_path=e.http_path,
+            access_token=e.access_token,
+            database=e.database
         )
 
         # If callbacks is a single function then push it into a list.
@@ -110,7 +107,8 @@ def refresh_schemata(completer, executor):
 @refresher('tables')
 def refresh_tables(completer, executor):
     completer.extend_relations(executor.tables(), kind='tables')
-    completer.extend_columns(executor.table_columns(), kind='tables')
+    # TODO(arikfr): this is ugly... 
+    completer.extend_columns(executor.table_columns(completer.dbmetadata['tables'][executor.database].keys()), kind='tables')
 
 
 @refresher('special_commands')

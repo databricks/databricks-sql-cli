@@ -1,5 +1,5 @@
 import pytest
-from athenacli.packages.parseutils import (
+from dbsqlcli.packages.parseutils import (
     extract_tables, query_starts_with, queries_start_with, is_destructive
 )
 

@@ -98,11 +98,11 @@ class AthenaCompleter(Completer):
         metadata = self.dbmetadata[kind]
         for relname in data:
             try:
-                metadata[self.dbname][relname[0]] = ['*']
+                metadata[self.dbname][relname[1]] = ['*']
             except KeyError:
                 _logger.error('%r %r listed in unrecognized schema %r',
-                              kind, relname[0], self.dbname)
-            self.all_completions.add(relname[0])
+                              kind, relname[1], self.dbname)
+            self.all_completions.add(relname[1])
 
     def extend_columns(self, column_data, kind):
         """Extend column metadata

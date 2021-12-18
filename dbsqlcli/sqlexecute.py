@@ -14,36 +14,30 @@ class SQLExecute(object):
     DATABASES_QUERY = 'SHOW DATABASES'
     TABLES_QUERY = 'SHOW TABLES'
     TABLE_COLUMNS_QUERY = '''
-        SELECT table_name, column_name FROM information_schema.columns
-        WHERE table_schema = '%s'
-        ORDER BY table_name, ordinal_position
+        show columns in default.aaron_test
     '''
 
     def __init__(
         self,
-        
+        hostname, 
+        http_path, 
+        access_token, 
+        database
     ):
-        self.aws_access_key_id = aws_access_key_id
-        self.aws_secret_access_key = aws_secret_access_key
-        self.region_name = region_name
-        self.s3_staging_dir = s3_staging_dir
-        self.work_group = work_group
-        self.role_arn = role_arn
+        self.hostname = hostname
+        self.http_path = http_path
+        self.access_token = access_token
         self.database = database
 
         self.connect()
 
     def connect(self, database=None):
-        conn = pyathena.connect(
-            aws_access_key_id=self.aws_access_key_id,
-            aws_secret_access_key=self.aws_secret_access_key,
-            region_name=self.region_name,
-            s3_staging_dir=self.s3_staging_dir,
-            work_group=self.work_group,
-            schema_name=database or self.database,
-            role_arn=self.role_arn,
-            poll_interval=0.2 # 200ms
+        conn = dbsql.connect(
+            server_hostname=self.hostname,
+            http_path=self.http_path,
+            access_token=self.access_token
         )
+
         self.database = database or self.database
 
         if hasattr(self, 'conn'):
@@ -57,6 +51,8 @@ class SQLExecute(object):
         (title, rows, headers, status).
         '''
         # Remove spaces and EOL
+
+
         statement = statement.strip()
         if not statement:  # Empty string
             yield (None, None, None, None)
@@ -74,6 +70,8 @@ class SQLExecute(object):
                 sql = sql[:-2].strip()
 
             cur = self.conn.cursor()
+            if self.database != 'default':
+                cur.execute(f'use {self.database}')
 
             try:
                 for result in special.execute(cur, sql):
@@ -85,8 +83,6 @@ class SQLExecute(object):
     def get_result(self, cursor):
         '''Get the current result's data from the cursor.'''
         title = headers = None
-
-        special.set_output_location(cursor.output_location)
 
         # cursor.description is not None for queries that return result sets,
         # e.g. SELECT or SHOW.
@@ -103,18 +99,27 @@ class SQLExecute(object):
     def tables(self):
         '''Yields table names.'''
         with self.conn.cursor() as cur:
+            if self.database != 'default':
+                cur.execute(f'use {self.database}')
             cur.execute(self.TABLES_QUERY)
             for row in cur:
                 yield row
 
-    def table_columns(self):
+    def table_columns(self, tables):
         '''Yields column names.'''
         with self.conn.cursor() as cur:
-            cur.execute(self.TABLE_COLUMNS_QUERY % self.database)
-            for row in cur:
-                yield row
+            if self.database != 'default':
+                cur.execute(f'use {self.database}')
+            
+            for table_name in tables:
+                cur.execute(f'show columns from {table_name}')
+
+                for row in cur:
+                    yield table_name, row[0]
 
     def databases(self):
         with self.conn.cursor() as cur:
+            if self.database != 'default':
+                cur.execute(f'use {self.database}')
             cur.execute(self.DATABASES_QUERY)
             return [x[0] for x in cur.fetchall()]

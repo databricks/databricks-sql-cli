@@ -1,22 +1,4 @@
 
-[aws_profile default]
-# If you are a user of aws cli, you might want to use some configurations of aws cli,
-# please refer to https://athenacli.readthedocs.io/en/latest/awsconfig.html for more infomation.
-aws_access_key_id = ''
-aws_secret_access_key = ''
-region = '' # e.g us-west-2, us-east-1
-
-# Add role_arn to assume a role required for Athena access
-role_arn = '' # e.g. arn:aws:iam::987654321000:role/MyAthenaAccessRole
-
-# Amazon S3 staging directory where query results are stored
-# NOTE: S3 should in the same region as specified above.
-# The format is 's3://<your s3 directory path>'
-s3_staging_dir = ''
-
-# Name of athena workgroup that you want to use
-work_group = '' # e.g. primary
-
 [main]
 # log_file location.
 log_file = ~/.athenacli/app.log
@@ -62,14 +44,14 @@ key_bindings = emacs
 
 # Athena prompt
 # \d - Database name
-# \r - Region
+# \h - Hostname
 # \D - The full current date
 # \m - Minutes of the current time
 # \n - Newline
 # \P - AM/PM
 # \R - The current time, in 24-hour military time (0–23)
 # \s - Seconds of the current time
-prompt = '\r:\d> '
+prompt = '\h:\d> '
 prompt_continuation = '-> '
 
 # enable pager on startup

@@ -11,16 +11,13 @@ def rows_status(rows_length):
         return 'Query OK'
 
 def statistics(cursor):
-    if cursor:
-        # Most regions are $5 per TB: https://aws.amazon.com/athena/pricing/
-        approx_cost = cursor.data_scanned_in_bytes / (1024 ** 4) * 5
-
-        return '\nExecution time: %d ms, Data scanned: %s, Approximate cost: $%.2f' % (
-                cursor.engine_execution_time_in_millis,
-                humanize_size(cursor.data_scanned_in_bytes),
-                approx_cost)
-    else:
-        return ''
+    # if cursor:
+    #     return '\nExecution time: %d ms' % (
+    #             cursor.engine_execution_time_in_millis)
+    # else:
+    #     return ''
+    # TODO(arikfr): figure if we can bring back some of this somehow
+    return ''
 
 def humanize_size(num_bytes):
     suffixes = ['B', 'KB', 'MB', 'GB', 'TB']
