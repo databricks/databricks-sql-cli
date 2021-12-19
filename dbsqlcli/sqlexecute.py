@@ -11,19 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 class SQLExecute(object):
-    DATABASES_QUERY = 'SHOW DATABASES'
-    TABLES_QUERY = 'SHOW TABLES'
-    TABLE_COLUMNS_QUERY = '''
+    DATABASES_QUERY = "SHOW DATABASES"
+    TABLES_QUERY = "SHOW TABLES"
+    TABLE_COLUMNS_QUERY = """
         show columns in default.aaron_test
-    '''
+    """
 
-    def __init__(
-        self,
-        hostname, 
-        http_path, 
-        access_token, 
-        database
-    ):
+    def __init__(self, hostname, http_path, access_token, database):
         self.hostname = hostname
         self.http_path = http_path
         self.access_token = access_token
@@ -35,23 +29,22 @@ class SQLExecute(object):
         conn = dbsql.connect(
             server_hostname=self.hostname,
             http_path=self.http_path,
-            access_token=self.access_token
+            access_token=self.access_token,
         )
 
         self.database = database or self.database
 
-        if hasattr(self, 'conn'):
+        if hasattr(self, "conn"):
             self.conn.close()
         self.conn = conn
 
     def run(self, statement):
-        '''Execute the sql in the database and return the results.
+        """Execute the sql in the database and return the results.
 
         The results are a list of tuples. Each tuple has 4 values
         (title, rows, headers, status).
-        '''
+        """
         # Remove spaces and EOL
-
 
         statement = statement.strip()
         if not statement:  # Empty string
@@ -62,26 +55,26 @@ class SQLExecute(object):
 
         for sql in components:
             # Remove spaces, eol and semi-colons.
-            sql = sql.rstrip(';')
+            sql = sql.rstrip(";")
 
             # \G is treated specially since we have to set the expanded output.
-            if sql.endswith('\\G'):
+            if sql.endswith("\\G"):
                 special.set_expanded_output(True)
                 sql = sql[:-2].strip()
 
-            cur = self.conn.cursor()
-            if self.database != 'default':
-                cur.execute(f'use {self.database}')
+            with self.conn.cursor() as cur:
+                if self.database != "default":
+                    cur.execute(f"use {self.database}")
 
-            try:
-                for result in special.execute(cur, sql):
-                    yield result
-            except special.CommandNotFound:  # Regular SQL
-                cur.execute(sql)
-                yield self.get_result(cur)
+                try:
+                    for result in special.execute(cur, sql):
+                        yield result
+                except special.CommandNotFound:  # Regular SQL
+                    cur.execute(sql)
+                    yield self.get_result(cur)
 
     def get_result(self, cursor):
-        '''Get the current result's data from the cursor.'''
+        """Get the current result's data from the cursor."""
         title = headers = None
 
         # cursor.description is not None for queries that return result sets,
@@ -91,35 +84,35 @@ class SQLExecute(object):
             rows = cursor.fetchall()
             status = format_status(rows_length=len(rows), cursor=cursor)
         else:
-            logger.debug('No rows in result.')
+            logger.debug("No rows in result.")
             rows = None
             status = format_status(rows_length=None, cursor=cursor)
         return (title, rows, headers, status)
 
     def tables(self):
-        '''Yields table names.'''
+        """Yields table names."""
         with self.conn.cursor() as cur:
-            if self.database != 'default':
-                cur.execute(f'use {self.database}')
+            if self.database != "default":
+                cur.execute(f"use {self.database}")
             cur.execute(self.TABLES_QUERY)
             for row in cur:
                 yield row
 
     def table_columns(self, tables):
-        '''Yields column names.'''
+        """Yields column names."""
         with self.conn.cursor() as cur:
-            if self.database != 'default':
-                cur.execute(f'use {self.database}')
-            
+            if self.database != "default":
+                cur.execute(f"use {self.database}")
+
             for table_name in tables:
-                cur.execute(f'show columns from {table_name}')
+                cur.execute(f"show columns from {table_name}")
 
                 for row in cur:
                     yield table_name, row[0]
 
     def databases(self):
         with self.conn.cursor() as cur:
-            if self.database != 'default':
-                cur.execute(f'use {self.database}')
+            if self.database != "default":
+                cur.execute(f"use {self.database}")
             cur.execute(self.DATABASES_QUERY)
             return [x[0] for x in cur.fetchall()]
