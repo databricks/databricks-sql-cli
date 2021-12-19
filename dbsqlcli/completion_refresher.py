@@ -1,4 +1,5 @@
 import threading
+import requests
 from collections import OrderedDict
 
 from dbsqlcli.completer import DBSQLCompleter
@@ -69,6 +70,8 @@ class CompletionRefresher(object):
         while 1:
             for refresher in self.refreshers.values():
                 refresher(completer, executor)
+                for callback in callbacks:
+                    callback(completer)
                 if self._restart_refresh.is_set():
                     self._restart_refresh.clear()
                     break
@@ -111,14 +114,30 @@ def refresh_schemata(completer, executor):
 
 @refresher("tables")
 def refresh_tables(completer, executor):
-    completer.extend_relations(executor.tables(), kind="tables")
+    schema = requests.get(
+        "https://...",
+        headers={"Authorization": f"Bearer {executor.access_token}"},
+    ).json()["schema"]
+
+    # tables = [rel["name"] for rel in schema if rel["type"] == "TABLE"]
+    # views = [rel["name"] for rel in schema if rel["type"] == "VIEW"]
+    # completer.extend_relations(views, kind="views")
+    tables = [("", rel["name"].replace("lego.", "")) for rel in schema]
+    completer.extend_relations(tables, kind="tables")
+
+    columns = [
+        (row["name"].replace("lego.", ""), column["name"])
+        for row in schema
+        for column in row["columns"]
+    ]
+    completer.extend_columns(columns, kind="tables")
     # TODO(arikfr): this is ugly...
-    completer.extend_columns(
-        executor.table_columns(
-            completer.dbmetadata["tables"][executor.database].keys()
-        ),
-        kind="tables",
-    )
+    # completer.extend_columns(
+    #     executor.table_columns(
+    #         completer.dbmetadata["tables"][executor.database].keys()
+    #     ),
+    #     kind="tables",
+    # )
 
 
 @refresher("special_commands")

@@ -35,7 +35,7 @@ class DBSQLCompleter(Completer):
     functions = get_literals("functions")
 
     def __init__(
-        self, smart_completion=True, supported_formats=(), keyword_casing="upper"
+        self, smart_completion=True, supported_formats=(), keyword_casing="auto"
     ):
         super(self.__class__, self).__init__()
         self.smart_completion = smart_completion
@@ -368,6 +368,17 @@ class DBSQLCompleter(Completer):
         """
         columns = []
         meta = self.dbmetadata
+
+        if not scoped_tbls:
+            columns = list(
+                set(
+                    [
+                        column
+                        for columns in meta["tables"][self.dbname].values()
+                        for column in columns
+                    ]
+                )
+            )
 
         for tbl in scoped_tbls:
             # A fully qualified schema.relname reference or default_schema
