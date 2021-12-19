@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+
 class FavoriteQueries(object):
 
-    section_name = 'favorite_queries'
+    section_name = "favorite_queries"
 
-    usage = '''
+    usage = """
 Favorite Queries are a way to save frequently used queries
 with a short name.
 Examples:
@@ -31,7 +32,7 @@ Examples:
     # Delete a favorite query.
     > \\fd simple
     simple: Deleted
-'''
+"""
 
     def __init__(self, config):
         self.config = config
@@ -52,10 +53,11 @@ Examples:
         try:
             del self.config[self.section_name][name]
         except KeyError:
-            return '%s: Not Found.' % name
+            return "%s: Not Found." % name
         self.config.write()
-        return '%s: Deleted' % name
+        return "%s: Deleted" % name
 
 
 from dbsqlcli.config import read_config_file
-favoritequeries = FavoriteQueries(read_config_file('~/.athenacli/athenaclirc'))
+
+favoritequeries = FavoriteQueries(read_config_file("~/.dbsqlcli/dbsqlclirc"))

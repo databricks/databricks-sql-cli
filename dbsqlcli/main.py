@@ -35,8 +35,7 @@ from databricks.sql import OperationalError
 
 import dbsqlcli.packages.special as special
 from dbsqlcli.sqlexecute import SQLExecute
-from dbsqlcli.completer import AthenaCompleter
-from dbsqlcli.style import AthenaStyle
+from dbsqlcli.completer import DBSQLCompleter
 from dbsqlcli.completion_refresher import CompletionRefresher
 from dbsqlcli.packages.tabular_output import sql_format
 from dbsqlcli.clistyle import style_factory, style_factory_output
@@ -54,11 +53,11 @@ Query = namedtuple("Query", ["query", "successful", "mutating"])
 
 LOGGER = logging.getLogger(__name__)
 PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
-ATHENACLIRC = "~/.athenacli/athenaclirc"
-DEFAULT_CONFIG_FILE = os.path.join(PACKAGE_ROOT, "athenaclirc")
+DBSQLCLIRC = "~/.dbsqlcli/dbsqlclirc"
+DEFAULT_CONFIG_FILE = os.path.join(PACKAGE_ROOT, "dbsqlclirc")
 
 
-class AthenaCli(object):
+class DBSQLCli(object):
     DEFAULT_PROMPT = "\\d@\\r> "
     MAX_LEN_PROMPT = 45
 
@@ -77,7 +76,7 @@ class AthenaCli(object):
             err_msg = """
 There was an error while connecting to Databricks SQL. It could be caused due to
 missing/incomplete configuration. Please verify the configuration in %s
-and run athenacli again.
+and run dbsqlcli again.
 
 For more details about the error, you can check the log file: %s""" % (
                 clirc,
@@ -102,7 +101,7 @@ For more details about the error, you can check the log file: %s""" % (
         self.cli_style = _cfg["colors"]
         self.output_style = style_factory_output(self.syntax_style, self.cli_style)
 
-        self.completer = AthenaCompleter()
+        self.completer = DBSQLCompleter()
         self._completer_lock = threading.Lock()
         self.completion_refresher = CompletionRefresher()
 
@@ -138,11 +137,11 @@ For more details about the error, you can check the log file: %s""" % (
         LOGGER.addHandler(handler)
         LOGGER.setLevel(log_level)
 
-        root_logger = logging.getLogger("athenacli")
+        root_logger = logging.getLogger("dbsqlcli")
         root_logger.addHandler(handler)
         root_logger.setLevel(log_level)
 
-        root_logger.debug("Initializing athenacli logging.")
+        root_logger.debug("Initializing dbsqlcli logging.")
         root_logger.debug("Log file %r.", log_file)
 
         pgspecial_logger = logging.getLogger("special")
@@ -639,7 +638,7 @@ def is_mutating(status):
 @click.option("--access-token", type=str, help="Access Token")
 @click.option(
     "--clirc",
-    default=ATHENACLIRC,
+    default=DBSQLCLIRC,
     type=click.Path(dir_okay=False),
     help="Location of clirc file.",
 )
@@ -648,14 +647,14 @@ def is_mutating(status):
 )
 @click.argument("database", default="default", nargs=1)
 def cli(execute, hostname, http_path, access_token, clirc, table_format, database):
-    """A Athena terminal client with auto-completion and syntax highlighting.
+    """A DBSQL terminal querying client with auto-completion and syntax highlighting.
 
     \b
     Examples:
-      - athenacli
-      - athenacli my_database
+      - dbsqlcli
+      - dbsqlcli my_database
     """
-    if (clirc == ATHENACLIRC) and (not os.path.exists(os.path.expanduser(clirc))):
+    if (clirc == DBSQLCLIRC) and (not os.path.exists(os.path.expanduser(clirc))):
         err_msg = (
             """
         Welcome to DBSQL CLI!
@@ -663,7 +662,7 @@ def cli(execute, hostname, http_path, access_token, clirc, table_format, databas
         It seems this is your first time to run dbsqlcli,
         we generated a default config file for you
             %s
-        Please change it accordingly, and run athenacli again.
+        Please change it accordingly, and run dbsqlcli again.
         """
             % clirc
         )
@@ -671,7 +670,7 @@ def cli(execute, hostname, http_path, access_token, clirc, table_format, databas
         write_default_config(DEFAULT_CONFIG_FILE, clirc)
         sys.exit(1)
 
-    athenacli = AthenaCli(
+    dbsqlcli = DBSQLCli(
         clirc=clirc,
         hostname=hostname,
         http_path=http_path,
@@ -699,14 +698,14 @@ def cli(execute, hostname, http_path, access_token, clirc, table_format, databas
         else:
             query = execute
         try:
-            athenacli.formatter.format_name = table_format
-            athenacli.run_query(query)
+            dbsqlcli.formatter.format_name = table_format
+            dbsqlcli.run_query(query)
             exit(0)
         except Exception as e:
             click.secho(str(e), err=True, fg="red")
             exit(1)
 
-    athenacli.run_cli()
+    dbsqlcli.run_cli()
 
 
 if __name__ == "__main__":
