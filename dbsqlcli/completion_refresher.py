@@ -111,14 +111,15 @@ def refresh_schemata(completer, executor):
 
 @refresher("tables")
 def refresh_tables(completer, executor):
+    # extend_relations adds to the list of table names
+    # extend_columns adds to the list of columns
+
     completer.extend_relations(executor.tables(), kind="tables")
-    # TODO(arikfr): this is ugly...
-    completer.extend_columns(
-        executor.table_columns(
-            completer.dbmetadata["tables"][executor.database].keys()
-        ),
-        kind="tables",
-    )
+    # This fetches the columns added in the previous line
+
+    current_tables = completer.dbmetadata["tables"][executor.database].keys()
+    completer.extend_columns(executor.table_columns(current_tables), kind="tables")
+
 
 
 @refresher("special_commands")
