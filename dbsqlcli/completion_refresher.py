@@ -121,7 +121,6 @@ def refresh_tables(completer, executor):
     completer.extend_columns(executor.table_columns(current_tables), kind="tables")
 
 
-
 @refresher("special_commands")
 def refresh_special(completer, executor):
     completer.extend_special_commands(COMMANDS.keys())

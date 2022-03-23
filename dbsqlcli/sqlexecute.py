@@ -92,7 +92,6 @@ class SQLExecute(object):
 
         Makes a call to cursor.columns() which returns both tables and columns
         """
-        print("Fetching all tables and columns")
         TABLE_NAME = 2
         COLUMN_NAME = 3
 
@@ -100,13 +99,12 @@ class SQLExecute(object):
             data = cur.columns(schema_name=self.database).fetchall()
             self._tables = {i[TABLE_NAME]: None for i in data}.keys()
             self._columns = [(i[TABLE_NAME], i[COLUMN_NAME]) for i in data]
+
     def tables(self):
         """Yields table names."""
-        print("running tables")
         if not hasattr(self, "_tables"):
             self._load_table_and_columns()
         for row in self._tables:
-            print(f"yielding table {row}")
             yield (row,)
 
     def table_columns(self, tables):
@@ -115,11 +113,10 @@ class SQLExecute(object):
         # Can we ignore the tables parameter completely?
         if not hasattr(self, "_columns"):
             self._load_table_and_columns()
-        
+
         for row in self._columns:
             if row[0] in tables:
                 yield row[0], row[1]
-
 
     def databases(self):
         with self.conn.cursor() as cur:
