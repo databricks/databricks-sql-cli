@@ -87,34 +87,38 @@ class SQLExecute(object):
             status = format_status(rows_length=None, cursor=cursor)
         return (title, rows, headers, status)
 
-    def _load_table_and_columns(self):
-        """Load tables and columns from SQL Endpoint
-
-        Makes a call to cursor.columns() which returns both tables and columns
-        """
-        TABLE_NAME = 2
-        COLUMN_NAME = 3
-
-        with self.conn.cursor() as cur:
-            data = cur.columns(schema_name=self.database).fetchall()
-            self._tables = {i[TABLE_NAME]: None for i in data}.keys()
-            self._columns = [(i[TABLE_NAME], i[COLUMN_NAME]) for i in data]
 
     def tables(self):
         """Yields table names."""
-        if not hasattr(self, "_tables"):
-            self._load_table_and_columns()
-        for row in self._tables:
+
+        TABLE_NAME = 2
+        with self.conn.cursor() as cur:
+            data = cur.tables(schema_name=self.database).fetchall()
+            _tables = [i[TABLE_NAME] for i in data]
+
+        for row in _tables:
             yield (row,)
 
     def table_columns(self, tables):
         """Yields column names."""
 
-        # Can we ignore the tables parameter completely?
-        if not hasattr(self, "_columns"):
-            self._load_table_and_columns()
+        TABLE_NAME = 2
+        COLUMN_NAME = 3
 
-        for row in self._columns:
+        _all_tables = [i for i in self.tables()]
+
+        with self.conn.cursor() as cur:
+            if len(_all_tables) < 100:
+                data = cur.columns(schema_name=self.database).fetchall()
+                _columns = [(i[TABLE_NAME], i[COLUMN_NAME]) for i in data]
+            else:
+                _columns = []
+                for table in tables:
+                    data = cur.columns(schema_name=self.database, table_name=table).fetchall()
+                    _transformed = [(i[TABLE_NAME], i[COLUMN_NAME]) for i in data]
+                    _columns.extend(_transformed)
+
+        for row in _columns:
             if row[0] in tables:
                 yield row[0], row[1]
 
