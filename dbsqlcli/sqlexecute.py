@@ -12,10 +12,6 @@ logger = logging.getLogger(__name__)
 
 class SQLExecute(object):
     DATABASES_QUERY = "SHOW DATABASES"
-    TABLES_QUERY = "SHOW TABLES"
-    TABLE_COLUMNS_QUERY = """
-        show columns in default.aaron_test
-    """
 
     def __init__(self, hostname, http_path, access_token, database):
         self.hostname = hostname
@@ -30,6 +26,7 @@ class SQLExecute(object):
             server_hostname=self.hostname,
             http_path=self.http_path,
             access_token=self.access_token,
+            schema=database or 'default'
         )
 
         self.database = database or self.database
@@ -124,5 +121,5 @@ class SQLExecute(object):
 
     def databases(self):
         with self.conn.cursor() as cur:
-            cur.execute(self.DATABASES_QUERY)
-            return [x[0] for x in cur.fetchall()]
+            _databases = cur.schemas().fetchall()
+            return [x[0] for x in _databases]
