@@ -35,7 +35,7 @@ class DBSQLCompleter(Completer):
     functions = get_literals("functions")
 
     def __init__(
-        self, smart_completion=True, supported_formats=(), keyword_casing="upper"
+        self, smart_completion=True, supported_formats=(), keyword_casing="auto"
     ):
         super(self.__class__, self).__init__()
         self.smart_completion = smart_completion
