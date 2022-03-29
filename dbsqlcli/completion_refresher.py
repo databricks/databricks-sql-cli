@@ -1,5 +1,4 @@
 import threading
-import requests
 from collections import OrderedDict
 
 from dbsqlcli.completer import DBSQLCompleter
@@ -70,8 +69,6 @@ class CompletionRefresher(object):
         while 1:
             for refresher in self.refreshers.values():
                 refresher(completer, executor)
-                for callback in callbacks:
-                    callback(completer)
                 if self._restart_refresh.is_set():
                     self._restart_refresh.clear()
                     break
@@ -114,30 +111,14 @@ def refresh_schemata(completer, executor):
 
 @refresher("tables")
 def refresh_tables(completer, executor):
-    schema = requests.get(
-        "https://e2-dogfood.staging.cloud.databricks.com/api/2.0/preview/sql/databricks/databases/af574c41-045c-4d50-b078-67d78b766128/lego/tables",
-        headers={"Authorization": f"Bearer {executor.access_token}"},
-    ).json()["schema"]
+    # extend_relations adds to the list of table names
+    # extend_columns adds to the list of columns
 
-    # tables = [rel["name"] for rel in schema if rel["type"] == "TABLE"]
-    # views = [rel["name"] for rel in schema if rel["type"] == "VIEW"]
-    # completer.extend_relations(views, kind="views")
-    tables = [("", rel["name"].replace("lego.", "")) for rel in schema]
-    completer.extend_relations(tables, kind="tables")
+    completer.extend_relations(executor.tables(), kind="tables")
+    # This fetches the columns added in the previous line
 
-    columns = [
-        (row["name"].replace("lego.", ""), column["name"])
-        for row in schema
-        for column in row["columns"]
-    ]
-    completer.extend_columns(columns, kind="tables")
-    # TODO(arikfr): this is ugly...
-    # completer.extend_columns(
-    #     executor.table_columns(
-    #         completer.dbmetadata["tables"][executor.database].keys()
-    #     ),
-    #     kind="tables",
-    # )
+    current_tables = completer.dbmetadata["tables"][executor.database].keys()
+    completer.extend_columns(executor.table_columns(current_tables), kind="tables")
 
 
 @refresher("special_commands")
