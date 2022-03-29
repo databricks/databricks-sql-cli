@@ -114,7 +114,7 @@ class DBSQLCompleter(Completer):
         metadata = self.dbmetadata[kind]
         for relname in data:
             try:
-                metadata[self.dbname][relname[1]] = ["*"]
+                metadata[self.dbname][relname[0]] = ["*"]
             except KeyError:
                 _logger.error(
                     "%r %r listed in unrecognized schema %r",
@@ -122,7 +122,7 @@ class DBSQLCompleter(Completer):
                     relname[1],
                     self.dbname,
                 )
-            self.all_completions.add(relname[1])
+            self.all_completions.add(relname[0])
 
     def extend_columns(self, column_data, kind):
         """Extend column metadata
@@ -368,17 +368,6 @@ class DBSQLCompleter(Completer):
         """
         columns = []
         meta = self.dbmetadata
-
-        if not scoped_tbls:
-            columns = list(
-                set(
-                    [
-                        column
-                        for columns in meta["tables"][self.dbname].values()
-                        for column in columns
-                    ]
-                )
-            )
 
         for tbl in scoped_tbls:
             # A fully qualified schema.relname reference or default_schema
