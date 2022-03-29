@@ -63,8 +63,6 @@ class SQLExecute(object):
                 sql = sql[:-2].strip()
 
             with self.conn.cursor() as cur:
-                if self.database != "default":
-                    cur.execute(f"use {self.database}")
 
                 try:
                     for result in special.execute(cur, sql):
@@ -112,7 +110,5 @@ class SQLExecute(object):
 
     def databases(self):
         with self.conn.cursor() as cur:
-            if self.database != "default":
-                cur.execute(f"use {self.database}")
             cur.execute(self.DATABASES_QUERY)
             return [x[0] for x in cur.fetchall()]
