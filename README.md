@@ -1,8 +1,3 @@
-[![PyPI](https://img.shields.io/pypi/v/athenacli.svg)](https://pypi.python.org/pypi/dbsqlcli)
-[![Downloads](https://pepy.tech/badge/athenacli)](https://pepy.tech/project/dbsqlcli)
-[![image](https://img.shields.io/pypi/l/athenacli.svg)](https://pypi.org/project/athenacli/)
-[![image](https://img.shields.io/pypi/pyversions/athenacli.svg)](https://pypi.org/project/athenacli/)
-
 # Introduction
 
 AthenaCLI is a command line interface (CLI) for the [Athena](https://aws.amazon.com/athena/) service that can do auto-completion and syntax highlighting, and is a proud member of the dbcli community.
@@ -15,21 +10,11 @@ AthenaCLI is a command line interface (CLI) for the [Athena](https://aws.amazon.
 
 ### Install via `pip`
 
-If you already know how to install python packages, then you can simply do:
+TBD
 
-``` bash
-$ pip install athenacli
-```
+### Download a release
 
-### Install via `brew`
-
-[Homebrew](https://brew.sh/) users can install by:
-
-```sh
-$ brew install athenacli
-```
-
-If you don't know how to install python packages, please check the [Install](./docs/install.rst) page for more options (e.g docker)
+TBD
 
 ## Config
 
@@ -123,25 +108,12 @@ Please go to the [Usages](https://athenacli.readthedocs.io/en/latest/usage.html)
 
 # Contributions
 
-If you're interested in contributing to this project, first of all I would like to extend my heartfelt gratitude. I've written a small [doc](https://athenacli.readthedocs.io/en/latest/develop.html) to describe how to get this running in a development setup.
-
-Please feel free to reach out to me if you need help. My email: zhuzhaolong0 AT gmail com
-
-# FAQs
-
-Please refer to the [FAQs](https://athenacli.readthedocs.io/en/latest/faq.html) for other information, e.g. "How can I get support for athenacli?".
+TBD
 
 # Credits
 
-A special thanks to [Amjith Ramanujam](https://github.com/amjith) for creating pgcli and mycli, which inspired me to create this AthenaCLI, and AthenaCLI is created based on a clone of mycli.
-
-Thanks to [Jonathan Slenders](https://github.com/jonathanslenders) for creating the [Python Prompt Toolkit](https://github.com/jonathanslenders/python-prompt-toolkit), which leads me to pgcli and mycli. It's a lot of fun playing with this library.
-
-Thanks to [PyAthena](https://github.com/laughingman7743/PyAthena) for a pure python adapter to Athena database.
-
-Last but not least, thanks my team and manager encourage me to work on this hobby project.
+// Thank the athenacli guy.
 
 # Similar projects
 
-- [satterly/athena-cli](https://github.com/satterly/athena-cli): Presto-like CLI tool for AWS Athena.
-- [pengwynn/athena-cli](https://github.com/pengwynn/athena-cli): CLI for Amazon Athena, powered by JRuby.
+Link to dbcli.
