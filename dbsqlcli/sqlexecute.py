@@ -17,16 +17,16 @@ class SQLExecute(object):
         self.hostname = hostname
         self.http_path = http_path
         self.access_token = access_token
-        self.database = database
+        self.database = database or 'default'
 
-        self.connect()
+        self.connect(database=self.database)
 
     def connect(self, database=None):
         conn = dbsql.connect(
             server_hostname=self.hostname,
             http_path=self.http_path,
             access_token=self.access_token,
-            schema=database or 'default'
+            schema=database
         )
 
         self.database = database or self.database
