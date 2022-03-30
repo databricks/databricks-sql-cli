@@ -1,12 +1,154 @@
-import os
-import json
-
-ROOT = os.path.dirname(__file__)
-LITERAL_FILE = os.path.join(ROOT, 'literals.json')
-
-
-with open(LITERAL_FILE) as f:
-    LITERALS = json.load(f)
+LITERALS = {
+    "keywords": {
+        "ALTER": [
+            "DATABASE",
+            "SCHEMA",
+            "TABLE"
+        ],
+        "CREATE": [
+            "DATABASE",
+            "EXTERNAL",
+            "TABLE",
+            "VIEW"
+        ],
+        "EXTERNAL": ["TABLE"],
+        "DESCRIBE": [
+            "TABLE",
+            "VIEW"
+        ],
+        "DROP": [
+            "DATABASE",
+            "TABLE",
+            "VIEW"
+        ],
+        "MSCK": [
+            "REPAIR TABLE"
+        ],
+        "SHOW": [
+            "COLUMNS IN",
+            "CREATE TABLE",
+            "CREATE VIEW",
+            "DATABASES",
+            "SCHEMAS",
+            "PARTITIONS",
+            "TABLES",
+            "TBLPROPERTIES",
+            "VIEWS"
+        ],
+        "REPLACE": ["VIEW"],
+        "WITH": [],
+        "SELECT": [],
+        "ALL": [],
+        "DISTINCT": [],
+        "FROM": [],
+        "WHERE": [],
+        "INNER": ["JOIN"],
+        "OUTER": ["JOIN"],
+        "CROSS": ["JOIN"],
+        "LEFT": ["JOIN", "OUTER JOIN"],
+        "RIGHT": ["JOIN", "OUTER JOIN"],
+        "FULL": ["JOIN", "OUTER JOIN"],
+        "JOIN": [],
+        "ON": [],
+        "USING": [],
+        "GROUP BY": [],
+        "HAVING": [],
+        "UNION": [],
+        "ORDER BY": [],
+        "ASC": [],
+        "DESC": [],
+        "NULLS FIRST": [],
+        "NULLS LAST": [],
+        "LIMIT": [],
+        "AND": [],
+        "OR": [],
+        "NOT": [],
+        "CAST": [],
+        "CASE": [],
+        "WHEN": [],
+        "THEN": [],
+        "ELSE": [],
+        "END": [],
+        "JSON": [],
+        "IF NOT EXISTS": []
+    },
+    "functions": [
+        "AVG",
+        "CONCAT",
+        "COUNT",
+        "EVERY",
+        "FIRST",
+        "FORMAT",
+        "LAST",
+        "LCASE",
+        "LEN",
+        "MAX",
+        "MIN",
+        "MID",
+        "NOW",
+        "ROUND",
+        "SUM",
+        "TOP",
+        "UCASE",
+        "IF",
+        "COALESCE",
+        "NULLIF",
+        "TRY",
+        "CAST",
+        "TRY_CAST",
+        "TYPEOF",
+        "ABS",
+        "CEIL",
+        "FLOOR",
+        "LOG",
+        "POW",
+        "CONCAT",
+        "LENGTH",
+        "LOWER",
+        "REPLACE",
+        "UPPER",
+        "TRIM",
+        "SUBSTR",
+        "NOW",
+        "DAY",
+        "YEAR",
+        "WEEK",
+        "REGEXP_EXTRACT_ALL",
+        "REGEXP_EXTRACT",
+        "REGEXP_LIKE",
+        "REGEXP_REPLACE",
+        "REGEXP_SPLIT",
+        "URL_EXTRACT_PATH",
+        "URL_EXTRACT_HOST",
+        "URL_EXTRACT_PARAMETER",
+        "URL_EXTRACT_QUERY",
+        "MAP",
+        "REDUCE",
+        "FILTER",
+        "TRANSFORM",
+        "ZIP_WITH",
+        "INDEX"
+    ],
+    "datatypes": [
+        "TINYINT",
+        "SMALLINT",
+        "INT",
+        "BIGINT",
+        "BINARY",
+        "BOOLEAN",
+        "DOUBLE",
+        "FLOAT",
+        "STRING",
+        "TIMESTAMP",
+        "DECIMAL",
+        "DATE",
+        "CHAR",
+        "VARCHAR",
+        "ARRAY",
+        "MAP",
+        "STRUCT"
+    ]
+}
 
 
 def get_literals(literal_type, type_=tuple):
