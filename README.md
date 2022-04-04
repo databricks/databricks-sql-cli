@@ -1,70 +1,46 @@
 # Introduction
 
-AthenaCLI is a command line interface (CLI) for the [Athena](https://aws.amazon.com/athena/) service that can do auto-completion and syntax highlighting, and is a proud member of the dbcli community.
+DBSQLCLI is a command line interface (CLI) for [Databricks SQL](https://databricks.com/product/databricks-sql) that can do auto-completion and syntax highlighting, and is a proud member of the dbcli community.
 
-![](./docs/_static/gif/athenacli.gif)
+![](./dbsqlcli-demo.gif)
 
 # Quick Start
 
 ## Install
 
+You can download the latest architecture-specific binary from the releases page. The `x86` build will work on MacOS/Windows/Linux with Intel chips. Apple silicon macs should use the `arm` binary.
+
 ### Install via `pip`
 
-TBD
+TBD.
 
-### Download a release
+During its internal release, `dbsqlcli` is not available via `pip`.
 
-TBD
+## Authentication
+
+To connect with SQL Endpoints `dbsqlcli` needs the host name and http path from the [connection details](https://docs.databricks.com/integrations/bi/jdbc-odbc-bi.html#get-connection-details-for-a-sql-endpoint) screen in Databricks SQL and a [personal access token](https://docs.databricks.com/dev-tools/api/latest/authentication.html#token-management). These can be passed in as arguments to `dbsqlcli` or by environment variables.
 
 ## Config
 
-A config file is automatically created at `~/.athenacli/athenaclirc` at first launch (run athenacli). See the file itself for a description of all available options.
-
-Below 4 variables are required. If you are a user of aws cli, you can refer to [awsconfig](./docs/awsconfig.rst) file to see how to reuse credentials configuration of aws cli.
-
-``` text
-# AWS credentials
-aws_access_key_id = ''
-aws_secret_access_key = ''
-region = '' # e.g us-west-2, us-east-1
-
-# Amazon S3 staging directory where query results are stored.
-# NOTE: S3 should in the same region as specified above.
-# The format is 's3://<your s3 directory path>'
-s3_staging_dir = ''
-
-# Name of athena workgroup that you want to use
-work_group = '' # e.g. primary
-```
-
-or you can also use environment variables:
-
-``` bash
-$ export AWS_ACCESS_KEY_ID=YOUR_ACCESS_KEY_ID
-$ export AWS_SECRET_ACCESS_KEY=YOUR_SECRET_ACCESS_KEY
-$ export AWS_DEFAULT_REGION=us-west-2
-$ export AWS_ATHENA_S3_STAGING_DIR=s3://YOUR_S3_BUCKET/path/to/
-$ export AWS_ATHENA_WORK_GROUP=YOUR_ATHENA_WORK_GROUP
-```
+A config file is automatically created at `~/.dbsqlcli/dbsqlclirc` at first launch (run `dbsqlcli`). See the file itself for a description of all available options. Most users will not need to modify this file.
 
 ## Create a table
 
 ``` bash
-$ athenacli -e examples/create_table.sql
+$ dbsqlcli -e examples/create_table.sql
 ```
-
-You can find `examples/create_table.sql` [here](./examples/create_table.sql).
 
 ## Run a query
 
 ``` bash
-$ athenacli -e 'select elb_name, request_ip from elb_logs LIMIT 10'
+$ dbsqlcli -e 'select id, name from minifigs LIMIT 10'
 ```
 
 ## REPL
 
 ``` bash
-$ athenacli [<database_name>]
+$ cd <directory containing dbsqlcli binary>
+$ ./dbslqcli [<database_name>]
 ```
 
 # Features
@@ -83,36 +59,36 @@ Please refer to the [Features](./docs/features.rst) page for the screenshots of 
 # Usages
 
 ```bash
-$ athenacli --help
-Usage: main.py [OPTIONS] [DATABASE]
+$ dbsqlcli --help
+Usage: dbsqlcli [OPTIONS] [DATABASE]
 
-A Athena terminal client with auto-completion and syntax highlighting.
+  A DBSQL terminal querying client with auto-completion and syntax
+  highlighting.
 
-Examples:
-    - athenacli
-    - athenacli my_database
+  Examples:
+    - dbsqlcli
+    - dbsqlcli my_database
 
 Options:
--e, --execute TEXT            Execute a command (or a file) and quit.
--r, --region TEXT             AWS region.
---aws-access-key-id TEXT      AWS access key id.
---aws-secret-access-key TEXT  AWS secretaccess key.
---s3-staging-dir TEXT         Amazon S3 staging directory where query
-                                results are stored.
---work-group TEXT             Amazon Athena workgroup in which query is run, default is primary
---athenaclirc PATH            Location of athenaclirc file.
---help                        Show this message and exit.
+  -e, --execute TEXT   Execute a command (or a file) and quit.
+  --hostname TEXT      Hostname  [env var: DBSQLCLI_HOST_NAME]
+  --http-path TEXT     HTTP Path  [env var: DBSQLCLI_HTTP_PATH]
+  --access-token TEXT  Access Token  [env var: DBSQLCLI_ACCESS_TOKEN]
+  --clirc FILE         Location of clirc file.
+  --table-format TEXT  Table format used with -e option.
+  --help               Show this message and exit.
 ```
 
-Please go to the [Usages](https://athenacli.readthedocs.io/en/latest/usage.html) for detailed information on how to use AthenaCLI.
 
 # Contributions
 
-TBD
+TBD.
+
+During its internal release, please report issues in the #eng-redash Slack channel.
 
 # Credits
 
-// Thank the athenacli guy.
+Huge thanks to the maintainers of https://github.com/dbcli/athenacli upon which this project is built.
 
 # Similar projects
 
