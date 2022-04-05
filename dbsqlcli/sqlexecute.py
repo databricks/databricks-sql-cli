@@ -59,14 +59,26 @@ class SQLExecute(object):
                 special.set_expanded_output(True)
                 sql = sql[:-2].strip()
 
-            with self.conn.cursor() as cur:
+           
+            attempts = 0
+            while attempts in [0,1]:
+                with self.conn.cursor() as cur:
+                    try:
+                        try:
+                            for result in special.execute(cur, sql):
+                                yield result
+                            break
+                        except special.CommandNotFound:  # Regular SQL
+                            cur.execute(sql)
+                            yield self.get_result(cur)
+                            break
+                    except Exception as e:
+                        logger.error(f"Could not run sql: {e}")
+                        attempts += 1
+                        logger.info("Attempting to reconnect database.")
+                        self.conn.close()
+                        self.connect(database=self.database)
 
-                try:
-                    for result in special.execute(cur, sql):
-                        yield result
-                except special.CommandNotFound:  # Regular SQL
-                    cur.execute(sql)
-                    yield self.get_result(cur)
 
     def get_result(self, cursor):
         """Get the current result's data from the cursor."""
