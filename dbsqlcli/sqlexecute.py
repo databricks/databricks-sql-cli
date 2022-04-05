@@ -111,9 +111,12 @@ class SQLExecute(object):
             else:
                 _columns = []
                 for table in tables:
-                    data = cur.columns(schema_name=self.database, table_name=table).fetchall()
-                    _transformed = [(i[TABLE_NAME], i[COLUMN_NAME]) for i in data]
-                    _columns.extend(_transformed)
+                    try:
+                        data = cur.columns(schema_name=self.database, table_name=table).fetchall()
+                        _transformed = [(i[TABLE_NAME], i[COLUMN_NAME]) for i in data]
+                        _columns.extend(_transformed)
+                    except Exception as e:
+                        logger.debug(f"Error fetching columns for {table}: {e}")
 
         for row in _columns:
             if row[0] in tables:
