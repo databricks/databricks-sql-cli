@@ -19,7 +19,7 @@ LOGGER = logging.getLogger(__name__)
 def log(logger, level, message):
     """Logs message to stderr if logging isn't initialized."""
 
-    if logger.parent.name != 'root':
+    if logger.parent.name != "root":
         logger.log(level, message)
     else:
         print(message, file=sys.stderr)
@@ -32,15 +32,23 @@ def read_config_file(f):
         f = os.path.expanduser(f)
 
     try:
-        config = ConfigObj(f, interpolation=False, encoding='utf8')
+        config = ConfigObj(f, interpolation=False, encoding="utf8")
     except ConfigObjError as e:
-        log(LOGGER, logging.ERROR, "Unable to parse line {0} of config file "
-            "'{1}'.".format(e.line_number, f))
+        log(
+            LOGGER,
+            logging.ERROR,
+            "Unable to parse line {0} of config file "
+            "'{1}'.".format(e.line_number, f),
+        )
         log(LOGGER, logging.ERROR, "Using successfully parsed config values.")
         return e.config
     except (IOError, OSError) as e:
-        log(LOGGER, logging.WARNING, "You don't have permission to read "
-            "config file '{0}'.".format(e.filename))
+        log(
+            LOGGER,
+            logging.WARNING,
+            "You don't have permission to read "
+            "config file '{0}'.".format(e.filename),
+        )
         return None
 
     return config

@@ -4,4 +4,4 @@
 import sys
 
 
-WIN = sys.platform in ('win32', 'cygwin')
+WIN = sys.platform in ("win32", "cygwin")

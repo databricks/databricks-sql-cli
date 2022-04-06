@@ -11,27 +11,27 @@ from dbsqlcli.packages.special import parse_special_command
 
 _logger = logging.getLogger(__name__)
 
-Column = namedtuple('Column', ['tables', 'drop_unique'])
+Column = namedtuple("Column", ["tables", "drop_unique"])
 Column.__new__.__defaults__ = (None, None)
 
-Function = namedtuple('Function', ['schema', 'filter'])
+Function = namedtuple("Function", ["schema", "filter"])
 # For convenience, don't require the `filter` argument in Function constructor
 Function.__new__.__defaults__ = (None, None)
 
-Keyword = namedtuple('Keyword', ['last_token'])
+Keyword = namedtuple("Keyword", ["last_token"])
 Keyword.__new__.__defaults__ = (None,)
 
-Table = namedtuple('Table', ['schema'])
-View = namedtuple('View', ['schema'])
-Alias = namedtuple('Alias', ['aliases'])
-Database = namedtuple('Database', [])
-Schema = namedtuple('Schema', [])
+Table = namedtuple("Table", ["schema"])
+View = namedtuple("View", ["schema"])
+Alias = namedtuple("Alias", ["aliases"])
+Database = namedtuple("Database", [])
+Schema = namedtuple("Schema", [])
 Keyword.__new__.__defaults__ = (None,)
-Show = namedtuple('Show', [])
-Special = namedtuple('Special', [])
-TableFormat = namedtuple('TableFormat', [])
-FileName = namedtuple('FileName', [])
-FavoriteQuery = namedtuple('FavoriteQuery', [])
+Show = namedtuple("Show", [])
+Special = namedtuple("Special", [])
+TableFormat = namedtuple("TableFormat", [])
+FileName = namedtuple("FileName", [])
+FavoriteQuery = namedtuple("FavoriteQuery", [])
 
 
 def suggest_type(full_text, text_before_cursor):
@@ -41,8 +41,7 @@ def suggest_type(full_text, text_before_cursor):
     A scope for a column category will be a list of tables.
     """
 
-    word_before_cursor = last_word(text_before_cursor,
-            include='many_punctuations')
+    word_before_cursor = last_word(text_before_cursor, include="many_punctuations")
 
     identifier = None
 
@@ -54,12 +53,10 @@ def suggest_type(full_text, text_before_cursor):
         # partially typed string which renders the smart completion useless because
         # it will always return the list of keywords as completion.
         if word_before_cursor:
-            if word_before_cursor.endswith(
-                    '(') or word_before_cursor.startswith('\\'):
+            if word_before_cursor.endswith("(") or word_before_cursor.startswith("\\"):
                 parsed = sqlparse.parse(text_before_cursor)
             else:
-                parsed = sqlparse.parse(
-                    text_before_cursor[:-len(word_before_cursor)])
+                parsed = sqlparse.parse(text_before_cursor[: -len(word_before_cursor)])
 
                 # word_before_cursor may include a schema qualification, like
                 # "schema_name.partial_name" or "schema_name.", so parse it
@@ -104,10 +101,11 @@ def suggest_type(full_text, text_before_cursor):
         if tok1 and tok1.value.startswith("\\"):
             return suggest_special(text_before_cursor)
 
-    last_token = statement and statement.token_prev(len(statement.tokens))[1] or ''
+    last_token = statement and statement.token_prev(len(statement.tokens))[1] or ""
 
-    return suggest_based_on_last_token(last_token, text_before_cursor,
-                                       full_text, identifier)
+    return suggest_based_on_last_token(
+        last_token, text_before_cursor, full_text, identifier
+    )
 
 
 def suggest_special(text):
@@ -118,22 +116,22 @@ def suggest_special(text):
         # Trying to complete the special command itself
         return (Special(),)
 
-    if cmd in ('\\u', '\\r'):
+    if cmd in ("\\u", "\\r"):
         return (Database(),)
 
-    if cmd in ('\\T'):
+    if cmd in ("\\T"):
         return (TableFormat(),)
 
-    if cmd in ['\\f', '\\fs', '\\fd']:
+    if cmd in ["\\f", "\\fs", "\\fd"]:
         return (FavoriteQuery(),)
 
-    if cmd in ['\\dt', '\\dt+']:
+    if cmd in ["\\dt", "\\dt+"]:
         return (
             Table(schema=None),
             View(schema=None),
             Schema(),
         )
-    elif cmd in ['\\.', 'source']:
+    elif cmd in ["\\.", "source"]:
         return (FileName(),)
 
     return (Keyword(), Special())
@@ -156,16 +154,17 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
         # 'where foo > 5 and '. We need to look "inside" token.tokens to handle
         # suggestions in complicated where clauses correctly
         prev_keyword, text_before_cursor = find_prev_keyword(text_before_cursor)
-        return suggest_based_on_last_token(prev_keyword, text_before_cursor,
-                                           full_text, identifier)
+        return suggest_based_on_last_token(
+            prev_keyword, text_before_cursor, full_text, identifier
+        )
     else:
         token_v = token.value.lower()
 
-    is_operand = lambda x: x and any([x.endswith(op) for op in ['+', '-', '*', '/']])
+    is_operand = lambda x: x and any([x.endswith(op) for op in ["+", "-", "*", "/"]])
 
     if not token:
         return (Keyword(), Special())
-    elif token_v.endswith('('):
+    elif token_v.endswith("("):
         p = sqlparse.parse(text_before_cursor)[0]
 
         if p.tokens and isinstance(p.tokens[-1], Where):
@@ -180,8 +179,9 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
             #        Suggest columns/functions AND keywords. (If we wanted to be
             #        really fancy, we could suggest only array-typed columns)
 
-            column_suggestions = suggest_based_on_last_token('where',
-                                    text_before_cursor, full_text, identifier)
+            column_suggestions = suggest_based_on_last_token(
+                "where", text_before_cursor, full_text, identifier
+            )
 
             # Check for a subquery expression (cases 3 & 4)
             where = p.tokens[-1]
@@ -192,33 +192,33 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
                 prev_tok = prev_tok.tokens[-1]
 
             prev_tok = prev_tok.value.lower()
-            if prev_tok == 'exists':
+            if prev_tok == "exists":
                 return (Keyword(),)
             else:
                 return column_suggestions
 
         # Get the token before the parens
         idx, prev_tok = p.token_prev(len(p.tokens) - 1)
-        if prev_tok and prev_tok.value and prev_tok.value.lower() == 'using':
+        if prev_tok and prev_tok.value and prev_tok.value.lower() == "using":
             # tbl1 INNER JOIN tbl2 USING (col1, col2)
             tables = extract_tables(full_text)
 
             # suggest columns that are present in more than one table
-            return (Column(tables=tables, drop_unique=True))
-        elif p.token_first().value.lower() == 'select':
+            return Column(tables=tables, drop_unique=True)
+        elif p.token_first().value.lower() == "select":
             # If the lparen is preceeded by a space chances are we're about to
             # do a sub-select.
-            if last_word(text_before_cursor, 'all_punctuations').startswith('('):
+            if last_word(text_before_cursor, "all_punctuations").startswith("("):
                 return (Keyword(),)
 
         # We're probably in a function argument list
         return (Column(tables=extract_tables(full_text)),)
-    elif token_v in ('set', 'by', 'distinct'):
+    elif token_v in ("set", "by", "distinct"):
         return (Column(tables=extract_tables(full_text)),)
-    elif token_v == 'as':
+    elif token_v == "as":
         # Don't suggest anything for an alias
         return tuple()
-    elif token_v in ('select', 'where', 'having'):
+    elif token_v in ("select", "where", "having"):
         # Check for a table alias or schema qualification
         parent = (identifier and identifier.get_parent_name()) or []
 
@@ -239,9 +239,20 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
                 Alias(aliases=aliases),
                 Keyword(token_v.upper()),
             )
-    elif (token_v.endswith('join') and token.is_keyword) or (token_v in
-            ('copy', 'from', 'update', 'into', 'describe', 'truncate',
-                'desc', 'explain', 'partitions')):
+    elif (token_v.endswith("join") and token.is_keyword) or (
+        token_v
+        in (
+            "copy",
+            "from",
+            "update",
+            "into",
+            "describe",
+            "truncate",
+            "desc",
+            "explain",
+            "partitions",
+        )
+    ):
         schema = (identifier and identifier.get_parent_name()) or None
 
         # Suggest tables from either the currently-selected schema or the
@@ -253,27 +264,27 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
             suggest.insert(0, Schema())
 
         # Only tables can be TRUNCATED, otherwise suggest views
-        if token_v != 'truncate':
+        if token_v != "truncate":
             suggest.append(View(schema=schema))
 
         return suggest
 
-    elif token_v in ('table', 'view', 'function', 'tblproperties'):
+    elif token_v in ("table", "view", "function", "tblproperties"):
         # E.g. 'DROP FUNCTION <funcname>', 'ALTER TABLE <tablname>'
         rel_type = {
-            'table': Table,
-            'view': View,
-            'function': Function,
-            'tblproperties': Table,
+            "table": Table,
+            "view": View,
+            "function": Function,
+            "tblproperties": Table,
         }[token_v]
 
         schema = (identifier and identifier.get_parent_name()) or None
         if schema:
-            return (rel_type(schema=schema))
+            return rel_type(schema=schema)
         else:
             return (Schema(), rel_type(schema=schema))
 
-    elif token_v == 'on':
+    elif token_v == "on":
         tables = extract_tables(full_text)  # [(schema, table, alias), ...]
         parent = (identifier and identifier.get_parent_name()) or None
         if parent:
@@ -284,7 +295,7 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
                 Column(tables=tables),
                 Table(schema=parent),
                 View(schema=parent),
-                Function(schema=parent)
+                Function(schema=parent),
             )
         else:
             # ON <suggestion>
@@ -299,25 +310,25 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
                 suggest.append(Table(schema=parent))
             return suggest
 
-    elif token_v in ('use', 'database', 'template', 'connect'):
+    elif token_v in ("use", "database", "template", "connect"):
         # "\c <db", "use <db>", "DROP DATABASE <db>",
         # "CREATE DATABASE <newdb> WITH TEMPLATE <db>"
         return (Database(),)
-    elif token_v == 'tableformat':
+    elif token_v == "tableformat":
         return (TableFormat(),)
-    elif token_v.endswith(',') or is_operand(token_v) or token_v in ['=', 'and', 'or']:
+    elif token_v.endswith(",") or is_operand(token_v) or token_v in ["=", "and", "or"]:
         prev_keyword, text_before_cursor = find_prev_keyword(text_before_cursor)
         if prev_keyword:
             return suggest_based_on_last_token(
-                prev_keyword, text_before_cursor, full_text, identifier)
+                prev_keyword, text_before_cursor, full_text, identifier
+            )
         else:
             return tuple()
-    elif token_v in {'alter', 'create', 'drop', 'show'}:
+    elif token_v in {"alter", "create", "drop", "show"}:
         return (Keyword(token_v.upper()),)
     else:
         return (Keyword(token_v.upper()),)
 
 
 def identifies(id, schema, table, alias):
-    return id == alias or id == table or (
-        schema and (id == schema + '.' + table))
+    return id == alias or id == table or (schema and (id == schema + "." + table))

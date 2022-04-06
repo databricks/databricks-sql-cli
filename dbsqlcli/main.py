@@ -633,9 +633,27 @@ def is_mutating(status):
 @click.option(
     "-e", "--execute", type=str, help="Execute a command (or a file) and quit."
 )
-@click.option("--hostname", type=str, help="Hostname", envvar="DBSQLCLI_HOST_NAME", show_envvar=True)
-@click.option("--http-path", type=str, help="HTTP Path", envvar="DBSQLCLI_HTTP_PATH", show_envvar=True)
-@click.option("--access-token", type=str, help="Access Token", envvar="DBSQLCLI_ACCESS_TOKEN", show_envvar=True)
+@click.option(
+    "--hostname",
+    type=str,
+    help="Hostname",
+    envvar="DBSQLCLI_HOST_NAME",
+    show_envvar=True,
+)
+@click.option(
+    "--http-path",
+    type=str,
+    help="HTTP Path",
+    envvar="DBSQLCLI_HTTP_PATH",
+    show_envvar=True,
+)
+@click.option(
+    "--access-token",
+    type=str,
+    help="Access Token",
+    envvar="DBSQLCLI_ACCESS_TOKEN",
+    show_envvar=True,
+)
 @click.option(
     "--clirc",
     default=DBSQLCLIRC,
