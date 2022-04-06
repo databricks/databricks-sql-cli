@@ -10,6 +10,9 @@ from databricks.sql.exc import RequestError
 
 logger = logging.getLogger(__name__)
 
+from dbsqlcli import __version__ as CURRENT_VERSION
+
+USER_AGENT_STRING = f"DBSQLCLI/{CURRENT_VERSION}"
 
 class SQLExecute(object):
     DATABASES_QUERY = "SHOW DATABASES"
@@ -19,6 +22,7 @@ class SQLExecute(object):
         self.http_path = http_path
         self.access_token = access_token
         self.database = database or 'default'
+        
 
         self.connect(database=self.database)
 
@@ -29,7 +33,8 @@ class SQLExecute(object):
             server_hostname=self.hostname,
             http_path=self.http_path,
             access_token=self.access_token,
-            schema=database
+            schema=database,
+            _user_agent_entry=USER_AGENT_STRING,
         )
 
         self.database = database or self.database
