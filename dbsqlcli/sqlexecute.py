@@ -14,6 +14,7 @@ from dbsqlcli import __version__ as CURRENT_VERSION
 
 USER_AGENT_STRING = f"DBSQLCLI/{CURRENT_VERSION}"
 
+
 class SQLExecute(object):
     DATABASES_QUERY = "SHOW DATABASES"
 
@@ -21,14 +22,13 @@ class SQLExecute(object):
         self.hostname = hostname
         self.http_path = http_path
         self.access_token = access_token
-        self.database = database or 'default'
-        
+        self.database = database or "default"
 
         self.connect(database=self.database)
 
     def connect(self, database=None):
         self.close_connection()
-        
+
         conn = dbsql.connect(
             server_hostname=self.hostname,
             http_path=self.http_path,
@@ -42,13 +42,12 @@ class SQLExecute(object):
         self.conn = conn
 
     def reconnect(self):
-        
+
         self.close_connection()
         self.connect(database=self.database)
 
     def close_connection(self):
-        """Close any open connection and remove the `conn` attribute
-        """
+        """Close any open connection and remove the `conn` attribute"""
 
         if not hasattr(self, "conn"):
             return
@@ -59,11 +58,12 @@ class SQLExecute(object):
             logger.debug("There is no active connection to close.")
             delattr(self, "conn")
         except RequestError as e:
-            logger.debug(f"dbsqlcli's connection is no longer active and will be recycle. It was probably was timed-out by SQL gateway: {e}")
+            logger.debug(
+                f"dbsqlcli's connection is no longer active and will be recycle. It was probably was timed-out by SQL gateway: {e}"
+            )
         finally:
             delattr(self, "conn")
 
-    
     def run(self, statement):
         """Execute the sql in the database and return the results.
 
@@ -89,24 +89,25 @@ class SQLExecute(object):
                 sql = sql[:-2].strip()
 
             attempts = 0
-            while attempts in [0,1]:
-                    try:
-                        with self.conn.cursor() as cur:
-                            for result in special.execute(cur, sql):
-                                yield result
-                            break
-                    except special.CommandNotFound:  # Regular SQL
-                        with self.conn.cursor() as cur:
-                            cur.execute(sql)
-                            yield self.get_result(cur)
-                            break
-                    except EOFError as e: # User enters `exit`
-                        raise e
-                    except RequestError as e:
-                        logger.error(f"SQL Gateway was timed out. Attempting to reconnect. Attempt {attempts+1}. Error: {e}")
-                        attempts += 1
-                        self.reconnect()
-
+            while attempts in [0, 1]:
+                try:
+                    with self.conn.cursor() as cur:
+                        for result in special.execute(cur, sql):
+                            yield result
+                        break
+                except special.CommandNotFound:  # Regular SQL
+                    with self.conn.cursor() as cur:
+                        cur.execute(sql)
+                        yield self.get_result(cur)
+                        break
+                except EOFError as e:  # User enters `exit`
+                    raise e
+                except RequestError as e:
+                    logger.error(
+                        f"SQL Gateway was timed out. Attempting to reconnect. Attempt {attempts+1}. Error: {e}"
+                    )
+                    attempts += 1
+                    self.reconnect()
 
     def get_result(self, cursor):
         """Get the current result's data from the cursor."""
@@ -123,7 +124,6 @@ class SQLExecute(object):
             rows = None
             status = format_status(rows_length=None, cursor=cursor)
         return (title, rows, headers, status)
-
 
     def tables(self):
         """Yields table names."""
@@ -152,7 +152,9 @@ class SQLExecute(object):
                 _columns = []
                 for table in tables:
                     try:
-                        data = cur.columns(schema_name=self.database, table_name=table).fetchall()
+                        data = cur.columns(
+                            schema_name=self.database, table_name=table
+                        ).fetchall()
                         _transformed = [(i[TABLE_NAME], i[COLUMN_NAME]) for i in data]
                         _columns.extend(_transformed)
                     except Exception as e:

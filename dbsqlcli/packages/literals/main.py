@@ -1,29 +1,11 @@
 LITERALS = {
     "keywords": {
-        "ALTER": [
-            "DATABASE",
-            "SCHEMA",
-            "TABLE"
-        ],
-        "CREATE": [
-            "DATABASE",
-            "EXTERNAL",
-            "TABLE",
-            "VIEW"
-        ],
+        "ALTER": ["DATABASE", "SCHEMA", "TABLE"],
+        "CREATE": ["DATABASE", "EXTERNAL", "TABLE", "VIEW"],
         "EXTERNAL": ["TABLE"],
-        "DESCRIBE": [
-            "TABLE",
-            "VIEW"
-        ],
-        "DROP": [
-            "DATABASE",
-            "TABLE",
-            "VIEW"
-        ],
-        "MSCK": [
-            "REPAIR TABLE"
-        ],
+        "DESCRIBE": ["TABLE", "VIEW"],
+        "DROP": ["DATABASE", "TABLE", "VIEW"],
+        "MSCK": ["REPAIR TABLE"],
         "SHOW": [
             "COLUMNS IN",
             "CREATE TABLE",
@@ -33,7 +15,7 @@ LITERALS = {
             "PARTITIONS",
             "TABLES",
             "TBLPROPERTIES",
-            "VIEWS"
+            "VIEWS",
         ],
         "REPLACE": ["VIEW"],
         "WITH": [],
@@ -70,7 +52,7 @@ LITERALS = {
         "ELSE": [],
         "END": [],
         "JSON": [],
-        "IF NOT EXISTS": []
+        "IF NOT EXISTS": [],
     },
     "functions": [
         "AVG",
@@ -127,7 +109,7 @@ LITERALS = {
         "FILTER",
         "TRANSFORM",
         "ZIP_WITH",
-        "INDEX"
+        "INDEX",
     ],
     "datatypes": [
         "TINYINT",
@@ -146,8 +128,8 @@ LITERALS = {
         "VARCHAR",
         "ARRAY",
         "MAP",
-        "STRUCT"
-    ]
+        "STRUCT",
+    ],
 }
 
 

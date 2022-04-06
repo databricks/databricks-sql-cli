@@ -11,6 +11,7 @@ def cli_is_multiline(cli):
             return False
         else:
             return not _multiline_exception(doc.text)
+
     return cond
 
 
@@ -24,12 +25,15 @@ def _multiline_exception(text):
     # if text.startswith('\\fs'):
     #     return orig.endswith('\n')
 
-    return (text.startswith('\\') or   # Special Command
-            text.endswith(';') or      # Ended with a semi-colon
-            text.endswith('\\g') or    # Ended with \g
-            text.endswith('\\G') or    # Ended with \G
-            (text == 'exit') or        # Exit doesn't need semi-colon
-            (text == 'quit') or        # Quit doesn't need semi-colon
-            (text == ':q') or          # To all the vim fans out there
-            (text == '')               # Just a plain enter without any text
-            )
+    return (
+        text.startswith("\\")
+        or text.endswith(";")  # Special Command
+        or text.endswith("\\g")  # Ended with a semi-colon
+        or text.endswith("\\G")  # Ended with \g
+        or (text == "exit")  # Ended with \G
+        or (text == "quit")  # Exit doesn't need semi-colon
+        or (text == ":q")  # Quit doesn't need semi-colon
+        or (  # To all the vim fans out there
+            text == ""
+        )  # Just a plain enter without any text
+    )
