@@ -10,9 +10,14 @@ DBSQLCLI is a command line interface (CLI) for [Databricks SQL](https://databric
 
 You can download the latest architecture-specific binary from the releases page. The `x86` build will work on MacOS/Windows/Linux with Intel chips. Apple silicon macs should use the `arm` binary.
 
+To launch dbsqlcli from anywhere, add the directory where you saved the binary to your PATH. You can do this by appending the following to your `~/.zshrc` 
+
+```zsh
+export PATH="$PATH:/path/to/directory/with/dbsqlcli"
+```
+
 ### Install via `pip`
 
-TBD.
 
 During its internal release, `dbsqlcli` is not available via `pip`.
 
@@ -24,11 +29,6 @@ To connect with SQL Endpoints `dbsqlcli` needs the host name and http path from 
 
 A config file is automatically created at `~/.dbsqlcli/dbsqlclirc` at first launch (run `dbsqlcli`). See the file itself for a description of all available options. Most users will not need to modify this file.
 
-## Create a table
-
-``` bash
-$ dbsqlcli -e examples/create_table.sql
-```
 
 ## Run a query
 
@@ -53,8 +53,6 @@ $ ./dbslqcli [<database_name>]
 - Pretty prints tabular data and various table formats.
 - Some special commands. e.g. Favorite queries.
 - Alias support. Column completions will work even when table names are aliased.
-
-Please refer to the [Features](./docs/features.rst) page for the screenshots of above features.
 
 # Usages
 
@@ -92,4 +90,9 @@ Huge thanks to the maintainers of https://github.com/dbcli/athenacli upon which 
 
 # Similar projects
 
-Link to dbcli.
+The [DBCLI](https://github.com/dbcli) organization on Github maintains CLIs for numerous database platforms including MySQL, Postgres, and MSSQL. 
+
+- https://github.com/dbcli/mycli
+- https://github.com/dbcli/pgcli
+- https://github.com/dbcli/mssql-cli
+
