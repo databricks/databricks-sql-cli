@@ -22,7 +22,7 @@ class SQLExecute(object):
         self.hostname = hostname
         self.http_path = http_path
         self.access_token = access_token
-        self.database = database or "default"
+        self.database = database or 'default'
 
         self.connect(database=self.database)
 
