@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 import logging
-import sqlparse
+import sqlparse, click
 from databricks import sql as dbsql
 
 from dbsqlcli.packages import special
@@ -58,9 +58,9 @@ class SQLExecute(object):
             logger.debug("There is no active connection to close.")
             delattr(self, "conn")
         except RequestError as e:
-            logger.debug(
-                f"dbsqlcli's connection is no longer active and will be recycle. It was probably was timed-out by SQL gateway: {e}"
-            )
+            message = "dbsqlcli's connection is no longer active and will be recycled. It was probably was timed-out by SQL gateway"
+            click.echo(message)
+            logger.debug(f"{message}: {e}")
         finally:
             delattr(self, "conn")
 
