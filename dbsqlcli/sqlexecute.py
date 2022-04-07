@@ -90,24 +90,24 @@ class SQLExecute(object):
 
             attempts = 0
             while attempts in [0, 1]:
-                try:
-                    with self.conn.cursor() as cur:
-                        for result in special.execute(cur, sql):
-                            yield result
-                        break
-                except special.CommandNotFound:  # Regular SQL
-                    with self.conn.cursor() as cur:
-                        cur.execute(sql)
-                        yield self.get_result(cur)
-                        break
-                except EOFError as e:  # User enters `exit`
-                    raise e
-                except RequestError as e:
-                    logger.error(
-                        f"SQL Gateway was timed out. Attempting to reconnect. Attempt {attempts+1}. Error: {e}"
-                    )
-                    attempts += 1
-                    self.reconnect()
+                with self.conn.cursor() as cur:
+                    try:
+                        try:    
+                            for result in special.execute(cur, sql):
+                                yield result
+                            break
+                        except special.CommandNotFound:  # Regular SQL 
+                            cur.execute(sql)
+                            yield self.get_result(cur)
+                            break
+                    except EOFError as e:  # User enters `exit`
+                        raise e
+                    except RequestError as e:
+                        logger.error(
+                            f"SQL Gateway was timed out. Attempting to reconnect. Attempt {attempts+1}. Error: {e}"
+                        )
+                        attempts += 1
+                        self.reconnect()
 
     def get_result(self, cursor):
         """Get the current result's data from the cursor."""
