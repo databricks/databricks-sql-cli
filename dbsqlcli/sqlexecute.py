@@ -58,7 +58,7 @@ class SQLExecute(object):
             logger.debug("There is no active connection to close.")
             delattr(self, "conn")
         except RequestError as e:
-            message = "dbsqlcli's connection is no longer active and will be recycled. It was probably was timed-out by SQL gateway"
+            message = "The connection is no longer active and will be recycled. It was probably was timed-out by SQL gateway"
             click.echo(message)
             logger.debug(f"{message}: {e}")
         finally:
