@@ -8,9 +8,9 @@ DBSQLCLI is a command line interface (CLI) for [Databricks SQL](https://databric
 
 ## Install
 
-You can download the latest architecture-specific binary from the releases page. The `x86` build will work on MacOS/Windows/Linux with Intel chips. Apple silicon macs should use the `arm` binary.
+You can download the latest architecture-specific binary from the releases page. The `x86` build will work on MacOS/Windows/Linux with Intel chips. Apple silicon macs should use the `m1` binary.
 
-To launch dbsqlcli from anywhere, add the directory where you saved the binary to your PATH. You can do this by appending the following to your `~/.zshrc` 
+Once downloaded, rename the file `dbsqlcli` and run `chmod +x dbsqlcli` to make the file executable. Since dbsqlcli is not signed with an Apple Developer account, before you can run the application from within Terminal on MacOS, you should locate the file in your Finder, right-click and select Open, then acknowledge the security warning. To launch dbsqlcli from anywhere, add the directory where you saved the binary to your PATH. You can do this by appending something like following to your `~/.zshrc` 
 
 ```zsh
 export PATH="$PATH:/path/to/directory/with/dbsqlcli"

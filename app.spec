@@ -22,7 +22,7 @@ pyz = PYZ(a.pure, a.zipped_data,
 
 # Avoid warning
 for b in a.binaries:
-    found = "pyarrow/lib.cpython-38-darwin.so" in b[1] 
+    found = "pyarrow/lib.cpython-39-darwin.so" in b[1] 
     if found:
         a.binaries.remove(b)
         break

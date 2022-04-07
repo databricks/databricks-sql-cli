@@ -5,7 +5,7 @@ description = ""
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.11"
 click = ">=7.0"
 Pygments = ">=1.6"
 prompt_toolkit = ">=2.0.6,<3.0.0"
@@ -13,6 +13,7 @@ sqlparse = ">=0.3.0,<0.4.0"
 configobj = ">=5.0.5"
 cli_helpers = {version = ">=1.1.0", extras = ["styles"]}
 databricks-sql-connector = "v2.0.0b1"
+pyinstaller = "^4.10"
 
 [tool.poetry.dev-dependencies]
 mock = ">=1.0.1"
