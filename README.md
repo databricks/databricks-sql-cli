@@ -82,7 +82,7 @@ Options:
 
 TBD.
 
-During its internal release, please report issues in the #eng-redash Slack channel.
+During its internal release, please report issues in the #dbsqlcli Slack channel.
 
 # Credits
 
