@@ -42,7 +42,7 @@ syntax_style = default
 # When Vi mode is enabled you can use modal editing features offered by Vi in the REPL.
 key_bindings = emacs
 
-# Athena prompt
+# DBSQL prompt
 # \d - Database name
 # \h - Hostname
 # \D - The full current date
