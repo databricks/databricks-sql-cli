@@ -38,6 +38,8 @@ $ cd <directory containing dbsqlcli binary>
 $ ./dbslqcli [<database_name>]
 ```
 
+Run the `help;` command to see a list of shortcuts
+
 # Features
 
 - Auto-completes as you type for SQL keywords as well as tables and columns in the database.
