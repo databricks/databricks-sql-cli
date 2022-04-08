@@ -6,20 +6,15 @@ DBSQLCLI is a command line interface (CLI) for [Databricks SQL](https://databric
 
 # Quick Start
 
-## Install
-
-You can download the latest architecture-specific binary from the releases page. The `x86` build will work on MacOS/Windows/Linux with Intel chips. Apple silicon macs should use the `arm` binary.
-
-To launch dbsqlcli from anywhere, add the directory where you saved the binary to your PATH. You can do this by appending the following to your `~/.zshrc` 
-
-```zsh
-export PATH="$PATH:/path/to/directory/with/dbsqlcli"
-```
-
 ### Install via `pip`
 
+You'll need Python 3.7 or newer.
 
-During its internal release, `dbsqlcli` is not available via `pip`.
+```bash
+pip install dbsqlcli
+```
+
+You can now run `dbsqlcli` from your terminal.
 
 ## Authentication
 
@@ -80,7 +75,7 @@ Options:
 
 # Contributions
 
-TBD.
+TBD
 
 During its internal release, please report issues in the #dbsqlcli Slack channel.
 
