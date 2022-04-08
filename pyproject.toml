@@ -3,9 +3,10 @@ name = "dbsql-cli"
 version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
+packages = [{include = "dbsqlcli"}]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.7"
 click = ">=7.0"
 Pygments = ">=1.6"
 prompt_toolkit = ">=2.0.6,<3.0.0"
@@ -22,6 +23,9 @@ twine = ">=1.11.0"
 click = ">=4.1"
 Sphinx = "^4.3.1"
 wheel = "^0.37.0"
+
+[tool.poetry.scripts]
+dbsqlcli = "dbsqlcli.main:cli"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
