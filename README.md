@@ -31,6 +31,12 @@ A config file is automatically created at `~/.dbsqlcli/dbsqlclirc` at first laun
 $ dbsqlcli -e 'select id, name from minifigs LIMIT 10'
 ```
 
+## Run a .sql file
+
+```bash
+$ dbsqlcli -e query.sql
+```
+
 ## REPL
 
 ``` bash
