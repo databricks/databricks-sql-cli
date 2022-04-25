@@ -83,9 +83,14 @@ Options:
 
 # Contributions
 
-TBD
-
 During its internal release, please report issues in the #dbsqlcli Slack channel.
+
+We use [Poetry](https://python-poetry.org/docs/) for development. Follow the instructions to install Poetry on your system. 
+
+1. Clone this repository
+2. `poetry install` will install its dependencies
+3. `poetry shell` will activate the local virtual environment
+4. `python app.py` will run `dbsqlcli` incorporating any of your local changes
 
 # Credits
 
