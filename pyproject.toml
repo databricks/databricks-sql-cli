@@ -1,31 +1,20 @@
 [tool.poetry]
 name = "dbsqlcli"
 version = "0.1.1"
-description = ""
+description = "A DBCLI client for Databricks SQL"
 authors = ["Your Name <you@example.com>"]
-packages = [{include = "dbsqlcli"}]
 
 [tool.poetry.dependencies]
-python = ">=3.7"
-click = ">=7.0"
-Pygments = ">=1.6"
-prompt_toolkit = ">=2.0.6,<3.0.0"
-sqlparse = ">=0.3.0,<0.4.0"
-configobj = ">=5.0.5"
-cli_helpers = {version = ">=1.1.0", extras = ["styles"]}
-databricks-sql-connector = "v2.0.0b1"
+python = "^3.7"
+Pygments = "^2.11.2"
+prompt-toolkit = "^3.0.29"
+sqlparse = "^0.4.2"
+configobj = "^5.0.6"
+cli-helpers = "^2.2.1"
+databricks-sql-connector = "^2.0.0"
+
 
 [tool.poetry.dev-dependencies]
-mock = ">=1.0.1"
-pytest = ">=4.6.5"
-tox = ">=2.7.0"
-twine = ">=1.11.0"
-click = ">=4.1"
-Sphinx = "^4.3.1"
-wheel = "^0.37.0"
-
-[tool.poetry.scripts]
-dbsqlcli = "dbsqlcli.main:cli"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
