@@ -45,6 +45,11 @@ jobs:
       - name: Install library
         run: poetry install --no-interaction
       #----------------------------------------------
+      #              black the code
+      #----------------------------------------------
+      - name: Black
+        run: poetry run black --check dbsqlcli
+      #----------------------------------------------
       #              run test suite
       #----------------------------------------------
       - name: Run tests
