@@ -12,7 +12,7 @@ def completer():
 
 @pytest.fixture
 def complete_event():
-    from mock import Mock
+    from unittest.mock import Mock
 
     return Mock()
 
@@ -36,14 +36,15 @@ def test_select_keyword_completion(completer, complete_event):
 
 
 def test_function_name_completion(completer, complete_event):
-    text = "SELECT MA"
-    position = len("SELECT MA")
+    text = "select map_con"
+    position = len("select map_con")
     result = completer.get_completions(
         Document(text=text, cursor_position=position), complete_event
     )
+
     assert result == [
-        Completion(text="MAP", start_position=-2),
-        Completion(text="MAX", start_position=-2),
+        Completion(text="map_concat", start_position=-7),
+        Completion(text="map_contains_key", start_position=-7),
     ]
 
 
