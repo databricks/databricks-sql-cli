@@ -92,11 +92,11 @@ class SQLExecute(object):
             while attempts in [0, 1]:
                 with self.conn.cursor() as cur:
                     try:
-                        try:    
+                        try:
                             for result in special.execute(cur, sql):
                                 yield result
                             break
-                        except special.CommandNotFound:  # Regular SQL 
+                        except special.CommandNotFound:  # Regular SQL
                             cur.execute(sql)
                             yield self.get_result(cur)
                             break
