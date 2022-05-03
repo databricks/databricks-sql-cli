@@ -524,15 +524,3 @@ def watch_query(arg, **kwargs):
             return
         finally:
             set_pager_enabled(old_pager_enabled)
-
-
-@special_command(
-    "download", "download", "Download results from last query.", arg_type=NO_QUERY
-)
-def download():
-    if OUTPUT_LOCATION is None:
-        return [(None, None, None, "No OUTPUT_LOCATION from last query")]
-    else:
-        aws_s3_command = f"aws s3 cp {OUTPUT_LOCATION} /tmp/"
-        click.echo(f"Running: {aws_s3_command}")
-        return execute_system_command(aws_s3_command)
