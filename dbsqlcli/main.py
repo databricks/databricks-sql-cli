@@ -57,6 +57,21 @@ DBSQLCLIRC = "~/.dbsqlcli/dbsqlclirc"
 DEFAULT_CONFIG_FILE = os.path.join(PACKAGE_ROOT, "dbsqlclirc")
 
 
+def apply_credentials_from_cfg(hostname, http_path, access_token, cfg):
+    """
+    Returns http_path, hostname, and access_token from the passed configuration or from clirc file.
+    """
+
+    if not cfg.get("credentials"):
+        return hostname, http_path, access_token
+
+    hostname = hostname or cfg["credentials"]["host_name"]
+    http_path = http_path or cfg["credentials"]["http_path"]
+    access_token = access_token or cfg["credentials"]["access_token"]
+
+    return hostname, http_path, access_token
+
+
 class DBSQLCli(object):
     DEFAULT_PROMPT = "\\d@\\r> "
     MAX_LEN_PROMPT = 45
@@ -68,6 +83,11 @@ class DBSQLCli(object):
         _cfg = self.config = read_config_files(config_files)
 
         self.init_logging(_cfg["main"]["log_file"], _cfg["main"]["log_level"])
+
+        # Prefer CLI arguments. Fall back to the clirc file otherwise
+        hostname, http_path, access_token = apply_credentials_from_cfg(
+            hostname, http_path, access_token, _cfg
+        )
 
         try:
             self.connect(hostname, http_path, access_token, database)
