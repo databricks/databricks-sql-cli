@@ -37,6 +37,12 @@ $ dbsqlcli -e 'select id, name from minifigs LIMIT 10'
 $ dbsqlcli -e query.sql
 ```
 
+## Run a .sql file and save to CSV
+
+```bash
+$ dbsqlcli -e query.sql > output.csv
+```
+
 ## REPL
 
 ``` bash
