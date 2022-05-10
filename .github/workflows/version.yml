@@ -1,0 +1,19 @@
+name: Test and Lint
+on: [push]
+jobs:
+  bump:
+    name: Bump the version number
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: main
+      - name: Get next version
+        uses: reecetech/version-increment@2022.2.4
+        id: version
+        with:
+          scheme: semver
+          increment: patch
+      - name: Checkout code
+        uses: actions/checkout@v3
