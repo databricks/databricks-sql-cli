@@ -1,9 +1,11 @@
 [tool.poetry]
-name = "dbsqlcli"
-version = "0.1.1"
+name = "databricks-sql-cli"
+version = "0.1.x"
 description = "A DBCLI client for Databricks SQL"
-authors = ["Your Name <you@example.com>"]
+authors = ["Databricks SQL CLI Maintainers <dbsqlcli-maintainers@databricks.com>"]
 packages = [{include = "dbsqlcli"}]
+readme = "README.md"
+license = "proprietary"
 
 [tool.poetry.dependencies]
 python = ">=3.7.1,<4.0"
@@ -18,7 +20,7 @@ pandas = "1.3.4"
 
 [tool.poetry.scripts]
 dbsqlcli = "dbsqlcli.main:cli"
-
+databricks-sql-cli = "dbsqlcli.main:cli"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"

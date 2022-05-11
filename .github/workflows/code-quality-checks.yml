@@ -1,7 +1,7 @@
-name: Test and Lint
+name: Code Quality Checks
 on: [push]
 jobs:
-  test:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
@@ -39,6 +39,11 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # set a valid version so install is successful
+      #----------------------------------------------
+      - name: Set valid version
+        run: poetry version 0.0.0
       #----------------------------------------------
       # install your root project, if required
       #----------------------------------------------
@@ -49,7 +54,7 @@ jobs:
       #----------------------------------------------
       - name: Run tests
         run: poetry run pytest test/
-  lint:
+  check-linting:
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
@@ -87,6 +92,11 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # set a valid version so install is successful
+      #----------------------------------------------
+      - name: Set valid version
+        run: poetry version 0.0.0
       #----------------------------------------------
       # install your root project, if required
       #----------------------------------------------
