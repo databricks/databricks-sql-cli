@@ -87,3 +87,13 @@ output.even-row = ""
 
 # Favorite queries.
 [favorite_queries]
+
+
+# Databricks SQL CLI can read authentication from this file. 
+# Un-comment and complete the below lines.
+# Note: you can override these values by passing different values to the CLI.
+
+# [credentials]
+# host_name = ""
+# http_path = ""
+# access_token = ""
