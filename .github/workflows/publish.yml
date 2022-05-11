@@ -1,4 +1,4 @@
-name: Publish to Pypi [Production]
+name: Publish to PyPI [Production]
 on:
   release:
     types: [published]
