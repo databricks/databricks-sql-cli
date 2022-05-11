@@ -4,7 +4,7 @@ version = "0.1.x"
 description = "A DBCLI client for Databricks SQL"
 authors = ["Databricks SQL CLI Maintainers <dbsqlcli-maintainers@databricks.com>"]
 packages = [{include = "dbsqlcli"}]
-readme = README.md
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.7.1,<4.0"
