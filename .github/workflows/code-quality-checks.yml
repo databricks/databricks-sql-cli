@@ -40,6 +40,11 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
       #----------------------------------------------
+      # set a valid version so install is successful
+      #----------------------------------------------
+      - name: Set valid version
+        run: poetry version 0.0.0
+      #----------------------------------------------
       # install your root project, if required
       #----------------------------------------------
       - name: Install library
@@ -87,6 +92,11 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # set a valid version so install is successful
+      #----------------------------------------------
+      - name: Set valid version
+        run: poetry version 0.0.0
       #----------------------------------------------
       # install your root project, if required
       #----------------------------------------------

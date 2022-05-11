@@ -42,11 +42,6 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
       #----------------------------------------------
-      # install your root project, if required
-      #----------------------------------------------
-      - name: Install library
-        run: poetry install --no-interaction
-      #----------------------------------------------
       # Get the current version and increment it (test-pypi requires a unique version number)
       #----------------------------------------------
       - name: Get next version
