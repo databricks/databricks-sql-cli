@@ -5,6 +5,7 @@ description = "A DBCLI client for Databricks SQL"
 authors = ["Databricks SQL CLI Maintainers <dbsqlcli-maintainers@databricks.com>"]
 packages = [{include = "dbsqlcli"}]
 readme = "README.md"
+license = "proprietary"
 
 [tool.poetry.dependencies]
 python = ">=3.7.1,<4.0"
