@@ -1,4 +1,4 @@
-name: Publish on Pypi [Test]
+name: Publish to PyPI [Test]
 on: [push]
 jobs:
   test-pypi:
