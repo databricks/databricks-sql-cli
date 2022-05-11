@@ -57,12 +57,10 @@ jobs:
       # Tell poetry to update the version number
       #----------------------------------------------
       - name: Update pyproject.toml
-        run: poetry version ${{ steps.version.outputs.version }}
+        run: poetry version ${{ steps.version.outputs.major-version }}.${{ steps.version.outputs.minor-version }}.dev$(date +%s)
       #----------------------------------------------
       # Tell poetry to update the version number and attempt to push to test-pypi
       #----------------------------------------------
-      - name: Update pyproject.toml
-        run: poetry version ${{ steps.version.outputs.version }}
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.10
         with:
