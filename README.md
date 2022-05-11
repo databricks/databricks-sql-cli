@@ -2,7 +2,7 @@
 
 Databricks SQL CLI is a command line interface (CLI) for [Databricks SQL](https://databricks.com/product/databricks-sql) that can do auto-completion and syntax highlighting, and is a proud member of the dbcli community.
 
-![](./dbsqlcli-demo.gif)
+![](https://github.com/databricks/databricks-sql-cli/raw/main/dbsqlcli-demo.gif)
 
 # Quick Start
 
