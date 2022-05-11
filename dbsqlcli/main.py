@@ -65,9 +65,9 @@ def apply_credentials_from_cfg(hostname, http_path, access_token, cfg):
     if not cfg.get("credentials"):
         return hostname, http_path, access_token
 
-    hostname = hostname or cfg["credentials"]["host_name"]
-    http_path = http_path or cfg["credentials"]["http_path"]
-    access_token = access_token or cfg["credentials"]["access_token"]
+    hostname = hostname or cfg.get("credentials", {}).get("host_name")
+    http_path = http_path or cfg.get("credentials", {}).get("http_path")
+    access_token = access_token or cfg.get("credentials", {}).get("access_token")
 
     return hostname, http_path, access_token
 
