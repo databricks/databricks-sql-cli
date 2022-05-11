@@ -1,8 +1,7 @@
-name: Test Pypi Publishing
+name: Code Quality Checks
 on: [push]
 jobs:
-  test-pypi:
-    name: Create path version number and push to test-pypi
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
@@ -24,6 +23,7 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
           installer-parallel: true
+
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
@@ -45,26 +45,55 @@ jobs:
       - name: Install library
         run: poetry install --no-interaction
       #----------------------------------------------
-      # Get the current version and increment it (test-pypi requires a unique version number)
+      #              run test suite
       #----------------------------------------------
-      - name: Get next version
-        uses: reecetech/version-increment@2022.2.4
-        id: version
+      - name: Run tests
+        run: poetry run pytest test/
+  check-linting:
+    runs-on: ubuntu-latest
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v2
         with:
-          scheme: semver
-          increment: patch
+          python-version: 3.9
       #----------------------------------------------
-      # Tell poetry to update the version number
+      #  -----  install & configure poetry  -----
       #----------------------------------------------
-      - name: Update pyproject.toml
-        run: poetry version ${{ steps.version.outputs.major-version }}.${{ steps.version.outputs.minor-version }}.dev$(date +%s)
-      #----------------------------------------------
-      # Tell poetry to update the version number and attempt to push to test-pypi
-      #----------------------------------------------
-      - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v1.10
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
         with:
-          pypi_token: ${{ secrets.TEST_PYPI_TOKEN }}
-          repository_name: "testpypi"
-          repository_url: "https://test.pypi.org/legacy/"
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
 
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ github.event.repository.name }}-${{ hashFiles('**/poetry.lock') }}
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # install your root project, if required
+      #----------------------------------------------
+      - name: Install library
+        run: poetry install --no-interaction
+      #----------------------------------------------
+      #              black the code
+      #----------------------------------------------
+      - name: Black
+        run: poetry run black --check dbsqlcli
