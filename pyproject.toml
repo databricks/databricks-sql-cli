@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dbsqlcli"
-version = "0.1.2-pre.95c6bd6"
+version = "0.1.1"
 description = "A DBCLI client for Databricks SQL"
 authors = ["Your Name <you@example.com>"]
 packages = [{include = "dbsqlcli"}]
