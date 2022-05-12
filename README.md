@@ -90,8 +90,6 @@ Options:
 
 # Contributions
 
-During its internal release, please report issues in the #dbsqlcli Slack channel.
-
 We use [Poetry](https://python-poetry.org/docs/) for development. Follow the instructions to install Poetry on your system. 
 
 1. Clone this repository
