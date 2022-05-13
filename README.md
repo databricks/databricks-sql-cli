@@ -11,7 +11,7 @@ Databricks SQL CLI is a command line interface (CLI) for [Databricks SQL](https:
 You'll need Python 3.7 or newer.
 
 ```bash
-python3 -m pip install dbsqlcli
+python3 -m pip install databricks-sql-cli
 ```
 
 You can now run `dbsqlcli` from your terminal.
@@ -89,8 +89,6 @@ Options:
 
 
 # Contributions
-
-During its internal release, please report issues in the #dbsqlcli Slack channel.
 
 We use [Poetry](https://python-poetry.org/docs/) for development. Follow the instructions to install Poetry on your system. 
 
