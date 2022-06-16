@@ -204,7 +204,7 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
             tables = extract_tables(full_text)
 
             # suggest columns that are present in more than one table
-            return (Column(tables=tables, drop_unique=True),)
+            return Column(tables=tables, drop_unique=True)
         elif p.token_first().value.lower() == "select":
             # If the lparen is preceeded by a space chances are we're about to
             # do a sub-select.
@@ -280,7 +280,7 @@ def suggest_based_on_last_token(token, text_before_cursor, full_text, identifier
 
         schema = (identifier and identifier.get_parent_name()) or None
         if schema:
-            return (rel_type(schema=schema),)
+            return rel_type(schema=schema)
         else:
             return (Schema(), rel_type(schema=schema))
 
