@@ -18,7 +18,7 @@ You can now run `dbsqlcli` from your terminal.
 
 ## Authentication
 
-To connect with SQL Endpoints `dbsqlcli` needs the host name and http path from the [connection details](https://docs.databricks.com/integrations/bi/jdbc-odbc-bi.html#get-connection-details-for-a-sql-endpoint) screen in Databricks SQL and a [personal access token](https://docs.databricks.com/dev-tools/api/latest/authentication.html#token-management). You can provide these to `dbsqlcli` as command line arguments, by setting environment variables, or by writing them into the `[credentials]` section of the `dbsqlclirc` file (see below).
+To connect with SQL Endpoints `dbsqlcli` needs the host name and http path from the [connection details](https://docs.databricks.com/integrations/bi/jdbc-odbc-bi.html#get-connection-details-for-a-sql-warehouse) screen in Databricks SQL and a [personal access token](https://docs.databricks.com/dev-tools/api/latest/authentication.html#token-management). You can provide these to `dbsqlcli` as command line arguments, by setting environment variables, or by writing them into the `[credentials]` section of the `dbsqlclirc` file (see below).
 
 
 ## Config
