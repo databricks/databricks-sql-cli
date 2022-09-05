@@ -8,7 +8,7 @@ readme = "README.md"
 license = "proprietary"
 
 [tool.poetry.dependencies]
-python = ">=3.7.1,<4.0"
+python = ">=3.8,<4.0"
 Pygments = "^2.11.2"
 prompt-toolkit = "^3.0.29"
 sqlparse = "^0.4.2"
@@ -16,7 +16,7 @@ configobj = "^5.0.6"
 cli-helpers = "^2.2.1"
 databricks-sql-connector = "^2.0.0"
 click = "^8.1.2"
-pandas = "1.3.4"
+pandas = "~1.4"
 
 [tool.poetry.scripts]
 dbsqlcli = "dbsqlcli.main:cli"
