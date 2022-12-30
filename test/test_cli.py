@@ -19,8 +19,8 @@ def test_clirc_credentials_are_used():
     """
 
 
-    host_name, http_path, access_token = apply_credentials_from_cfg(
-        None, None, None, CONFIG
+    host_name, http_path, access_token, auth_type = apply_credentials_from_cfg(
+        None, None, None, None, CONFIG
     )
 
     assert http_path == "config/path/to/endpoint"
@@ -33,8 +33,8 @@ def test_cli_args_credentials_are_used():
     """
 
 
-    host_name, http_path, access_token = apply_credentials_from_cfg(
-        HOST_NAME, HTTP_PATH, ACCESS_TOKEN, CONFIG
+    host_name, http_path, access_token, auth_type = apply_credentials_from_cfg(
+        HOST_NAME, HTTP_PATH, ACCESS_TOKEN, "databricks-oauth", CONFIG
     )
 
     assert http_path == HTTP_PATH
@@ -46,8 +46,12 @@ def test_blended_credentials_are_used():
     """When some credentials are passed ot the CLI, use config file to fill in the gaps.
     """
 
-    host_name, http_path, access_token = apply_credentials_from_cfg(
-        hostname=None, http_path=HTTP_PATH, access_token=None, cfg=CONFIG
+    host_name, http_path, access_token, auth_type = apply_credentials_from_cfg(
+        hostname=None,
+        http_path=HTTP_PATH,
+        access_token=None,
+        auth_type=None,
+        cfg=CONFIG,
     )
 
     assert host_name == "config.cloud.databricks.com"

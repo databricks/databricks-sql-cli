@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "databricks-sql-cli"
-version = "0.1.x"
+version = "0.1.5"
 description = "A DBCLI client for Databricks SQL"
 authors = ["Databricks SQL CLI Maintainers <dbsqlcli-maintainers@databricks.com>"]
 packages = [{include = "dbsqlcli"}]
@@ -14,9 +14,13 @@ prompt-toolkit = "^3.0.29"
 sqlparse = "^0.4.2"
 configobj = "^5.0.6"
 cli-helpers = "^2.2.1"
-databricks-sql-connector = "^2.0.0"
+databricks-sql-connector = "^2.2.2"
 click = "^8.1.2"
 pandas = "1.3.4"
+numpy = [
+    {version = "1.21.1", python = ">=3.7,<3.8"},
+    {version = "1.23.4", python = ">=3.8"}
+]
 
 [tool.poetry.scripts]
 dbsqlcli = "dbsqlcli.main:cli"

@@ -32,6 +32,7 @@ from pygments.lexers.sql import SqlLexer
 from cli_helpers.tabular_output import TabularOutputFormatter
 from cli_helpers.tabular_output import preprocessors
 from databricks.sql import OperationalError
+from databricks.sql.auth.auth import AuthType
 
 import dbsqlcli.packages.special as special
 from dbsqlcli.sqlexecute import SQLExecute
@@ -57,7 +58,7 @@ DBSQLCLIRC = "~/.dbsqlcli/dbsqlclirc"
 DEFAULT_CONFIG_FILE = os.path.join(PACKAGE_ROOT, "dbsqlclirc")
 
 
-def apply_credentials_from_cfg(hostname, http_path, access_token, cfg):
+def apply_credentials_from_cfg(hostname, http_path, access_token, auth_type, cfg):
     """
     Returns http_path, hostname, and access_token from the passed configuration or from clirc file.
     """
@@ -68,15 +69,16 @@ def apply_credentials_from_cfg(hostname, http_path, access_token, cfg):
     hostname = hostname or cfg.get("credentials", {}).get("host_name")
     http_path = http_path or cfg.get("credentials", {}).get("http_path")
     access_token = access_token or cfg.get("credentials", {}).get("access_token")
+    auth_type = auth_type or cfg.get("credentials", {}).get("auth_type")
 
-    return hostname, http_path, access_token
+    return hostname, http_path, access_token, auth_type
 
 
 class DBSQLCli(object):
     DEFAULT_PROMPT = "\\d@\\r> "
     MAX_LEN_PROMPT = 45
 
-    def __init__(self, clirc, hostname, http_path, access_token, database):
+    def __init__(self, clirc, hostname, http_path, access_token, database, auth_type):
         config_files = [DEFAULT_CONFIG_FILE]
         if os.path.exists(os.path.expanduser(clirc)):
             config_files.append(clirc)
@@ -85,12 +87,12 @@ class DBSQLCli(object):
         self.init_logging(_cfg["main"]["log_file"], _cfg["main"]["log_level"])
 
         # Prefer CLI arguments. Fall back to the clirc file otherwise
-        hostname, http_path, access_token = apply_credentials_from_cfg(
-            hostname, http_path, access_token, _cfg
+        hostname, http_path, access_token, auth_type = apply_credentials_from_cfg(
+            hostname, http_path, access_token, auth_type, _cfg
         )
 
         try:
-            self.connect(hostname, http_path, access_token, database)
+            self.connect(hostname, http_path, access_token, database, auth_type)
         except Exception as e:
             self.echo(str(e), err=True, fg="red")
             err_msg = """
@@ -223,8 +225,10 @@ For more details about the error, you can check the log file: %s""" % (
         self.prompt = self.get_prompt(arg)
         return [(None, None, None, "Changed prompt format to %s" % arg)]
 
-    def connect(self, hostname, http_path, access_token, database):
-        self.sqlexecute = SQLExecute(hostname, http_path, access_token, database)
+    def connect(self, hostname, http_path, access_token, database, auth_type):
+        self.sqlexecute = SQLExecute(
+            hostname, http_path, access_token, database, auth_type
+        )
 
     def handle_editor_command(self, text):
         """
@@ -683,8 +687,13 @@ def is_mutating(status):
 @click.option(
     "--table-format", type=str, default="csv", help="Table format used with -e option."
 )
+@click.option(
+    "--oauth", is_flag=True, help="Use oauth for authentication", default=False
+)
 @click.argument("database", default="default", nargs=1)
-def cli(execute, hostname, http_path, access_token, clirc, table_format, database):
+def cli(
+    execute, hostname, http_path, access_token, clirc, table_format, oauth, database
+):
     """A DBSQL terminal querying client with auto-completion and syntax highlighting.
 
     \b
@@ -714,6 +723,7 @@ def cli(execute, hostname, http_path, access_token, clirc, table_format, databas
         http_path=http_path,
         access_token=access_token,
         database=database,
+        auth_type=AuthType.DATABRICKS_OAUTH.value if oauth else None,
     )
 
     #  --execute argument
