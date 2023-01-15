@@ -60,7 +60,7 @@ DEFAULT_CONFIG_FILE = os.path.join(PACKAGE_ROOT, "dbsqlclirc")
 
 def apply_credentials_from_cfg(hostname, http_path, access_token, auth_type, cfg):
     """
-    Returns http_path, hostname, and access_token from the passed configuration or from clirc file.
+    Returns http_path, hostname, access_token and auth_type from the passed configuration or from clirc file.
     """
 
     if not cfg.get("credentials"):
@@ -78,7 +78,9 @@ class DBSQLCli(object):
     DEFAULT_PROMPT = "\\d@\\r> "
     MAX_LEN_PROMPT = 45
 
-    def __init__(self, clirc, hostname, http_path, access_token, database, auth_type):
+    def __init__(
+        self, clirc, hostname, http_path, access_token, database, auth_type=None
+    ):
         config_files = [DEFAULT_CONFIG_FILE]
         if os.path.exists(os.path.expanduser(clirc)):
             config_files.append(clirc)
@@ -717,13 +719,17 @@ def cli(
         write_default_config(DEFAULT_CONFIG_FILE, clirc)
         sys.exit(1)
 
+    optional_params = {}
+    if oauth:
+        optional_params["auth_type"] = AuthType.DATABRICKS_OAUTH.value
+
     dbsqlcli = DBSQLCli(
         clirc=clirc,
         hostname=hostname,
         http_path=http_path,
         access_token=access_token,
         database=database,
-        auth_type=AuthType.DATABRICKS_OAUTH.value if oauth else None,
+        **optional_params
     )
 
     #  --execute argument
