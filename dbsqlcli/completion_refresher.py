@@ -60,6 +60,7 @@ class CompletionRefresher(object):
             http_path=e.http_path,
             access_token=e.access_token,
             database=e.database,
+            auth_type=e.auth_type,
         )
 
         # If callbacks is a single function then push it into a list.
