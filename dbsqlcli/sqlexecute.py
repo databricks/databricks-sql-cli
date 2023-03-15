@@ -1,5 +1,5 @@
 # encoding: utf-8
-
+from typing import Optional
 import logging
 import sqlparse, click
 from databricks import sql as dbsql
@@ -8,26 +8,56 @@ from dbsqlcli.packages import special
 from dbsqlcli.packages.format_utils import format_status
 from databricks.sql.exc import RequestError
 
+from databricks.sql.experimental.oauth_persistence import OAuthPersistence, OAuthToken
+from databricks.sql.auth.auth import AuthType
+
 logger = logging.getLogger(__name__)
 
 from dbsqlcli import __version__ as CURRENT_VERSION
 
 USER_AGENT_STRING = f"DBSQLCLI/{CURRENT_VERSION}"
 
+DBSQL_CLI_OAUTH_CLIENT_ID = "databricks-cli"
+DBSQL_CLI_OAUTH_PORT = 8020
+
+
+class OAuthPersistenceCache(OAuthPersistence):
+    def __init__(self):
+        self.tokens = {}
+
+    def persist(self, hostname: str, oauth_token: OAuthToken):
+        self.tokens[hostname] = oauth_token
+
+    def read(self, hostname: str) -> Optional[OAuthToken]:
+        return self.tokens.get(hostname)
+
+
+oauth_token_cache = OAuthPersistenceCache()
+
 
 class SQLExecute(object):
     DATABASES_QUERY = "SHOW DATABASES"
 
-    def __init__(self, hostname, http_path, access_token, database):
+    def __init__(self, hostname, http_path, access_token, database, auth_type=None):
         self.hostname = hostname
         self.http_path = http_path
         self.access_token = access_token
         self.database = database or "default"
+        self.auth_type = auth_type
 
         self.connect(database=self.database)
 
     def connect(self, database=None):
         self.close_connection()
+
+        oauth_params = {}
+        if self.auth_type == AuthType.DATABRICKS_OAUTH.value:
+            oauth_params = {
+                "auth_type": self.auth_type,
+                "experimental_oauth_persistence": oauth_token_cache,
+                "oauth_client_id": DBSQL_CLI_OAUTH_CLIENT_ID,
+                "oauth_redirect_port": DBSQL_CLI_OAUTH_PORT,
+            }
 
         conn = dbsql.connect(
             server_hostname=self.hostname,
@@ -35,6 +65,7 @@ class SQLExecute(object):
             access_token=self.access_token,
             schema=database,
             _user_agent_entry=USER_AGENT_STRING,
+            **oauth_params,
         )
 
         self.database = database or self.database
