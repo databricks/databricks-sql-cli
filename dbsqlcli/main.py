@@ -213,7 +213,8 @@ For more details about the error, you can check the log file: %s""" % (
             None,
             None,
             None,
-            'You are now connected to database "%s.%s"' % (self.sqlexecute.catalog, self.sqlexecute.database),
+            'You are now connected to database "%s.%s"'
+            % (self.sqlexecute.catalog, self.sqlexecute.database),
         )
 
     def change_prompt_format(self, arg, **_):

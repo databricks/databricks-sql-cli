@@ -38,7 +38,9 @@ oauth_token_cache = OAuthPersistenceCache()
 class SQLExecute(object):
     DATABASES_QUERY = "SHOW DATABASES"
 
-    def __init__(self, hostname, http_path, access_token, database= "default", auth_type=None):
+    def __init__(
+        self, hostname, http_path, access_token, database="default", auth_type=None
+    ):
         self.hostname = hostname
         self.http_path = http_path
         self.access_token = access_token
