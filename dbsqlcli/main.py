@@ -213,7 +213,8 @@ For more details about the error, you can check the log file: %s""" % (
             None,
             None,
             None,
-            'You are now connected to database "%s"' % self.sqlexecute.database,
+            'You are now connected to database "%s.%s"'
+            % (self.sqlexecute.catalog, self.sqlexecute.database),
         )
 
     def change_prompt_format(self, arg, **_):
@@ -599,6 +600,7 @@ For more details about the error, you can check the log file: %s""" % (
         string = string.replace(
             "\\h", sqlexecute.hostname.replace(".cloud.databricks.com", "")
         )
+        string = string.replace("\\c", sqlexecute.catalog or "(none)")
         string = string.replace("\\d", sqlexecute.database or "(none)")
         string = string.replace("\\n", "\n")
         string = string.replace("\\D", now.strftime("%a %b %d %H:%M:%S %Y"))
