@@ -42,7 +42,12 @@ class SQLExecute(object):
         self.hostname = hostname
         self.http_path = http_path
         self.access_token = access_token
+        self.auth_type = auth_type
+        self._set_catalog_database(database)
+        self.connect()
 
+    def _set_catalog_database(self, database):
+        """Sets the catalog and database name if a single dot is supplied"""
         if database.count(".") == 1:
             component = database.split(".")
             self.catalog = component[0]
@@ -51,19 +56,11 @@ class SQLExecute(object):
             self.catalog = "hive_metastore"
             self.database = database
 
-        self.auth_type = auth_type
-
-        self.connect(database=self.database)
-
     def connect(self, database=None):
         self.close_connection()
 
-        if database and database.count(".") == 1:
-            component = database.split(".")
-            self.catalog = component[0]
-            self.database = component[1]
-        elif database:
-            self.database = database
+        if database:
+            self._set_catalog_database(database)
 
         oauth_params = {}
         if self.auth_type == AuthType.DATABRICKS_OAUTH.value:
