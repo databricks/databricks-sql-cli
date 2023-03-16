@@ -37,9 +37,8 @@ def list_tables(cur, arg=None, arg_type=PARSED_QUERY, verbose=False):
     "\\l", "\\l", "List databases.", arg_type=RAW_QUERY, case_sensitive=True
 )
 def list_databases(cur, **_):
-    _databases = cur.schemas().fetchall()
-    if _databases:
-        headers = [x[0] for x in _databases]
-        return [(None, _databases, headers, "")]
-    else:
-        return [(None, None, None, "")]
+    databases = cur.schemas().fetchall()
+    if databases:
+        headers = [field.title().removeprefix("Table_") for field in databases[0].__fields__]
+        return [(None, databases, headers, "")]
+    return [(None, None, None, "")]

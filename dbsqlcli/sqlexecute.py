@@ -38,17 +38,32 @@ oauth_token_cache = OAuthPersistenceCache()
 class SQLExecute(object):
     DATABASES_QUERY = "SHOW DATABASES"
 
-    def __init__(self, hostname, http_path, access_token, database, auth_type=None):
+    def __init__(self, hostname, http_path, access_token, database= "default", auth_type=None):
         self.hostname = hostname
         self.http_path = http_path
         self.access_token = access_token
-        self.database = database or "default"
+
+        if database.count(".") == 1:
+            component = database.split(".")
+            self.catalog = component[0]
+            self.database = component[1]
+        else:
+            self.catalog = "hive_metastore"
+            self.database = database
+
         self.auth_type = auth_type
 
         self.connect(database=self.database)
 
     def connect(self, database=None):
         self.close_connection()
+
+        if database and database.count(".") == 1:
+            component = database.split(".")
+            self.catalog = component[0]
+            self.database = component[1]
+        elif database:
+            self.database = database
 
         oauth_params = {}
         if self.auth_type == AuthType.DATABRICKS_OAUTH.value:
@@ -63,19 +78,13 @@ class SQLExecute(object):
             server_hostname=self.hostname,
             http_path=self.http_path,
             access_token=self.access_token,
-            schema=database,
+            catalog=self.catalog,
+            schema=self.database,
             _user_agent_entry=USER_AGENT_STRING,
             **oauth_params,
         )
 
-        self.database = database or self.database
-
         self.conn = conn
-
-    def reconnect(self):
-
-        self.close_connection()
-        self.connect(database=self.database)
 
     def close_connection(self):
         """Close any open connection and remove the `conn` attribute"""
@@ -138,7 +147,7 @@ class SQLExecute(object):
                             f"SQL Gateway was timed out. Attempting to reconnect. Attempt {attempts+1}. Error: {e}"
                         )
                         attempts += 1
-                        self.reconnect()
+                        self.connect()
 
     def get_result(self, cursor):
         """Get the current result's data from the cursor."""
