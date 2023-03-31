@@ -1,7 +1,11 @@
 # Release History
 
-## 0.3.x (Unreleased)
+## 0.4.0 (unreleased)
 
+## 0.3.0 (2023-03-31)
+
+- Removes `\u` command because it broke usages of `USE CATALOG <catalog name>`
+- Fix: destructive_warning setting is now properly read from clirc file and CLI args
 ## 0.2.0 (2023-03-15)
 
 - Support oauth authentication for AWS
