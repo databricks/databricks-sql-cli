@@ -51,7 +51,7 @@ key_bindings = emacs
 # \P - AM/PM
 # \R - The current time, in 24-hour military time (0–23)
 # \s - Seconds of the current time
-prompt = '\h:\d> '
+prompt = '\h> '
 prompt_continuation = '-> '
 
 # enable pager on startup
