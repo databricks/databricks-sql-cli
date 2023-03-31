@@ -9,8 +9,10 @@ def test_format_status_plural():
     assert format_status(rows_length=1) == "1 row in set"
     assert format_status(rows_length=2) == "2 rows in set"
 
+
 def test_format_status_no_results():
     assert format_status(rows_length=None) == "Query OK"
+
 
 def test_humanize_size():
     assert humanize_size(20) == "20 B"

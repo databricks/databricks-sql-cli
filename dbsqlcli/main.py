@@ -201,7 +201,6 @@ For more details about the error, you can check the log file: %s""" % (
                 msg += "\n\t{}".format(table_type)
             yield (None, None, None, msg)
 
-
     def change_prompt_format(self, arg, **_):
         """
         Change the prompt format.
