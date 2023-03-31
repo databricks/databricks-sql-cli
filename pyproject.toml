@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "databricks-sql-cli"
-version = "0.1.x"
+version = "0.1.4"
 description = "A DBCLI client for Databricks SQL"
 authors = ["Databricks SQL CLI Maintainers <dbsqlcli-maintainers@databricks.com>"]
 packages = [{include = "dbsqlcli"}]
