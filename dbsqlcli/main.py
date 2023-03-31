@@ -114,7 +114,7 @@ For more details about the error, you can check the log file: %s""" % (
         self.multi_line = _cfg["main"].as_bool("multi_line")
         self.key_bindings = _cfg["main"]["key_bindings"]
         self.prompt = _cfg["main"]["prompt"] or self.DEFAULT_PROMPT
-        self.destructive_warning = _cfg["main"]["destructive_warning"]
+        self.destructive_warning = _cfg["main"].as_bool("destructive_warning")
         self.syntax_style = _cfg["main"]["syntax_style"]
         self.prompt_continuation_format = _cfg["main"]["prompt_continuation"]
 
