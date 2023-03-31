@@ -173,9 +173,7 @@ For more details about the error, you can check the log file: %s""" % (
         pgspecial_logger.setLevel(log_level)
 
     def register_special_commands(self):
-        special.register_special_command(
-            self.change_db, "use", "\\u", "Change to a new database.", aliases=("\\u",)
-        )
+
         special.register_special_command(
             self.change_prompt_format,
             "prompt",
@@ -202,19 +200,6 @@ For more details about the error, you can check the log file: %s""" % (
             for table_type in self.formatter.supported_formats:
                 msg += "\n\t{}".format(table_type)
             yield (None, None, None, msg)
-
-    def change_db(self, arg, **_):
-        if arg is None:
-            self.sqlexecute.connect()
-        else:
-            self.sqlexecute.connect(database=arg)
-
-        yield (
-            None,
-            None,
-            None,
-            'You are now connected to database "%s"' % self.sqlexecute.database,
-        )
 
     def change_prompt_format(self, arg, **_):
         """
