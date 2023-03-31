@@ -17,9 +17,7 @@ ACCESS_TOKEN = "dapi_argRandomAccessKey"
 
 
 def test_clirc_credentials_are_used():
-    """When no credentials are passed to the CLI, read credentials from the config file
-    """
-
+    """When no credentials are passed to the CLI, read credentials from the config file"""
 
     host_name, http_path, access_token, auth_type = apply_credentials_from_cfg(
         None, None, None, None, CONFIG
@@ -31,9 +29,7 @@ def test_clirc_credentials_are_used():
 
 
 def test_cli_args_credentials_are_used():
-    """When credentials are passed to the CLI, use these instead of the config file.
-    """
-
+    """When credentials are passed to the CLI, use these instead of the config file."""
 
     host_name, http_path, access_token, auth_type = apply_credentials_from_cfg(
         HOST_NAME, HTTP_PATH, ACCESS_TOKEN, AuthType.DATABRICKS_OAUTH.value, CONFIG
@@ -46,8 +42,7 @@ def test_cli_args_credentials_are_used():
 
 
 def test_blended_credentials_are_used():
-    """When some credentials are passed ot the CLI, use config file to fill in the gaps.
-    """
+    """When some credentials are passed ot the CLI, use config file to fill in the gaps."""
 
     credential = CONFIG["credentials"].copy()
     credential["auth_type"] = AuthType.DATABRICKS_OAUTH.value
