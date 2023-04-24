@@ -2,6 +2,11 @@
 
 ## 0.4.0 (unreleased)
 
+
+## 0.3.1 (2023-04-24)
+
+- Fix: Fixed sqlparse import to work regardless how sqlparse is installed
+
 ## 0.3.0 (2023-03-31)
 
 - Removes `\u` command because it broke usages of `USE CATALOG <catalog name>`
