@@ -59,3 +59,14 @@ def test_blended_credentials_are_used():
     assert http_path == HTTP_PATH
     assert access_token == "dapi_configRandomAccessKey"
     assert auth_type == AuthType.DATABRICKS_OAUTH.value
+
+
+def test_passthrough_with_empty_config():
+    host_name, http_path, access_token, auth_type = apply_credentials_from_cfg(
+        HOST_NAME, HTTP_PATH, ACCESS_TOKEN, AuthType.DATABRICKS_OAUTH.value, {}
+    )
+
+    assert host_name == HOST_NAME
+    assert http_path == HTTP_PATH
+    assert access_token == ACCESS_TOKEN
+    assert auth_type == AuthType.DATABRICKS_OAUTH.value
