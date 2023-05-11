@@ -1,7 +1,9 @@
 # Release History
 
-## 0.4.0 (unreleased)
+## 0.3.x (unreleased)
+## 0.3.2 (2023-05-11)
 
+- Fix: return auth_type even if credentials are not in config (#47)
 
 ## 0.3.1 (2023-04-24)
 
