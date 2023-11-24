@@ -704,6 +704,7 @@ def cli(
     Examples:
       - dbsqlcli
       - dbsqlcli my_database
+      - dbsqlcli my_catalog.my_database
     """
     if (clirc == DBSQLCLIRC) and (not os.path.exists(os.path.expanduser(clirc))):
         err_msg = (
